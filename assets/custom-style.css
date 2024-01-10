@@ -733,3 +733,23 @@
         margin-top: 20px;
     }
 }
+
+.navigation--left .navigation__tier-1-container .navigation__tier-1>.navigation__item>.navigation__link {
+    color:  #333;
+    text-align: center;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 120%; /* 19.2px */
+    text-transform: capitalize;
+    padding: 25px;
+}
+
+.navigation__link::before {
+    display: none;
+    
+}
+
+.navigation--left .navigation__tier-1-container .navigation__tier-1>.navigation__item>.navigation__link:hover, .navigation--left .navigation__tier-1-container .navigation__tier-1>.navigation__item--active>.navigation__link {
+    color: #DA394C;
+}
