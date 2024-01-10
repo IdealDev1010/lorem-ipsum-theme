@@ -1,0 +1,8 @@
+{%- if article.image -%}
+  <div class="article-image">
+    <a href="{{ article.url }}">
+      {%- render 'responsive-image', image: article.image -%}
+    </a>
+  </div>
+{%- endif -%}
+<div><a href="{{ article.url }}">{{ article.title | escape }}</a></div>

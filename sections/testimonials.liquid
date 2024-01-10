@@ -1,0 +1,338 @@
+<div id="section-id-{{ section.id }}"
+     class="{% if section.settings.use_alt_bg %}use-alt-bg fully-padded-row--medium{% else %}fully-spaced-row--medium{% endif %}"
+     data-section-type="testimonials">
+
+  {%- style -%}
+    {%- if section.settings.layout contains 'image-' and section.settings.image_shape != 'natural' -%}
+      {%- for block in section.blocks -%}
+        #section-id-{{ section.id }} .testimonial-{{ forloop.index }} .rimage__image {
+          object-position: {{ block.settings.image_alignment }};
+        }
+      {% endfor %}
+    {%- endif -%}
+
+    #section-id-{{ section.id }} .testimonial__blockquote {
+      font-size: {{ section.settings.quote_text_size_mobile }}px;
+      {%- if section.settings.quote_text_size_mobile >= 90 -%}
+      line-height: 1em;
+      {%- endif %}
+    }
+    @media (min-width: 768px) {
+      #section-id-{{ section.id }} .testimonial__blockquote {
+        {%- assign quote_text_size_medium = section.settings.quote_text_size | times: 0.7 | at_least: section.settings.quote_text_size_mobile -%}
+        font-size: {{ quote_text_size_medium }}px;
+        {%- if quote_text_size_medium >= 90 -%}
+        line-height: 1em;
+        {%- endif %}
+      }
+    }
+    @media (min-width: 1100px) {
+      #section-id-{{ section.id }} .testimonial__blockquote {
+        font-size: {{ section.settings.quote_text_size }}px;
+        {%- if section.settings.quote_text_size >= 90 -%}
+        line-height: 1em;
+        {%- endif %}
+      }
+    }
+  {%- endstyle -%}
+
+
+  {%- liquid
+    assign image_aspect_ratio = false
+    assign cover = false
+    if section.settings.image_shape == 'landscape'
+      assign image_aspect_ratio = 1.25
+      assign cover = true
+    elsif section.settings.image_shape == 'square'
+      assign image_aspect_ratio = 1.0
+      assign cover = true
+    elsif section.settings.image_shape == 'portrait'
+      assign image_aspect_ratio = 0.8
+      assign cover = true
+    endif
+  -%}
+
+  <div class="container" data-cc-animate="cc-fade-in-up" data-cc-animate-delay="0.2s">
+    <div class="testimonial-list testimonial-list--{{ section.settings.layout }} testimonial-list--{% if section.settings.layout contains 'image-' %}with-images{% else %}without-images{% endif %}"
+        data-testimonial-count="{{ section.blocks.size }}"
+        data-autoplay="{{ section.settings.autoplay }}"
+        data-autoplay-speed="{{ section.settings.autoplay_speed }}000">
+      {% if section.settings.title != blank %}
+        <div class="subheading">{{ section.settings.title | escape }}</div>
+      {% endif %}
+
+      <div class="testimonial-list__inner">
+        {%- for block in section.blocks -%}
+          <div class="testimonial testimonial-{{ forloop.index }}" {{ block.shopify_attributes }}>
+            <div class="testimonial__column testimonial__column--text">
+              {% if section.settings.title != blank and section.settings.layout contains 'image-' %}
+                <div class="subheading">{{ section.settings.title | escape }}</div>
+              {% endif %}
+
+              <div class="testimonial__content">
+                {%- if block.settings.star_rating > 0 -%}
+                  <div class="testimonial__star-rating heading-font">
+                    {%- for i in (1..block.settings.star_rating) -%}
+                    <span class="testimonial__star">{% render 'svg-star' %}</span>
+                    {%- endfor -%}
+                  </div>
+                {%- endif -%}
+
+                {%- if block.settings.testimonial != blank -%}
+                  <div class="testimonial__text">
+                    <blockquote class="testimonial__blockquote{% if section.settings.text_caps %} testimonial__blockquote--caps{% endif %} heading-font">{% render 'multiline-text' with block.settings.testimonial %}</blockquote>
+                  </div>
+                {%- endif -%}
+
+                {%- if block.settings.author != blank -%}
+                  <div class="testimonial__author">
+                    &mdash; {{ block.settings.author | escape }}
+                  </div>
+                {%- endif -%}
+              </div>
+            </div>
+
+            {% if section.settings.layout contains 'image-' %}
+              <div class="testimonial__column testimonial__column--image">
+                <figure class="testimonial__image-with-caption">
+                  {%- if block.settings.link != blank -%}<a class="testimonial__image-with-caption__link" href="{{ block.settings.link }}">{%- endif -%}
+                  <div class="testimonial__image-wrapper">
+                    {% if block.settings.image != blank %}
+                      {%- render 'responsive-image', image: block.settings.image, manual_image_load: true, aspect_ratio: image_aspect_ratio, cover: cover -%}
+                    {% else %}
+                      <div class="placeholder-image" style="padding-top:{{ 100.0 | divided_by: image_aspect_ratio | round }}%">{{ 'image' | placeholder_svg_tag }}</div>
+                    {% endif %}
+                  </div>
+
+                  {% if block.settings.image_caption != blank %}
+                    <figcaption class="testimonial__image-with-caption__caption{% if block.settings.link != blank %} underline{% endif %}">
+                      {{ block.settings.image_caption | escape }}
+                    </figcaption>
+                  {% endif %}
+                  {%- if block.settings.link != blank -%}</a>{%- endif -%}
+                </figure>
+              </div>
+            {% endif %}
+          </div>
+        {%- endfor -%}
+      </div>
+      <div class="testimonial-list__controls"></div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Testimonials",
+    "class": "section-testimonials",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Customer reviews"
+      },
+      {
+        "type": "select",
+        "id": "layout",
+        "label": "Layout",
+        "options": [
+          {
+            "value": "image-left",
+            "label": "Image on left"
+          },
+          {
+            "value": "image-right",
+            "label": "Image on right"
+          },
+          {
+            "value": "no-image",
+            "label": "No image"
+          }
+        ],
+        "default": "image-right"
+      },
+      {
+        "type": "checkbox",
+        "id": "text_caps",
+        "label": "Capitalize text",
+        "default": false
+      },
+      {
+        "type": "range",
+        "id": "quote_text_size",
+        "min": 14,
+        "max": 50,
+        "step": 1,
+        "unit": "px",
+        "label": "Desktop quote text size",
+        "default": 30
+      },
+      {
+        "type": "range",
+        "id": "quote_text_size_mobile",
+        "min": 14,
+        "max": 40,
+        "step": 1,
+        "unit": "px",
+        "label": "Mobile quote text size",
+        "default": 20
+      },
+      {
+        "type": "select",
+        "id": "image_shape",
+        "label": "Image shape",
+        "options": [
+          {
+            "value": "natural",
+            "label": "Natural"
+          },
+          {
+            "value": "landscape",
+            "label": "Landscape (5:4)"
+          },
+          {
+            "value": "square",
+            "label": "Square (1:1)"
+          },
+          {
+            "value": "portrait",
+            "label": "Portrait (4:5)"
+          }
+        ],
+        "default": "square"
+      },
+      {
+        "type": "checkbox",
+        "id": "use_alt_bg",
+        "label": "Use alternate section color",
+        "default": false
+      },
+      {
+        "id": "autoplay",
+        "type": "checkbox",
+        "label": "Auto-rotate testimonials",
+        "default": true
+      },
+      {
+        "type": "range",
+        "id": "autoplay_speed",
+        "min": 1,
+        "max": 20,
+        "step": 1,
+        "unit": "s",
+        "label": "Change testimonials every",
+        "default": 5
+      }
+    ],
+    "blocks": [
+      {
+        "type": "testimonial",
+        "name": "Testimonial",
+        "settings": [
+          {
+            "type": "range",
+            "id": "star_rating",
+            "min": 0,
+            "max": 5,
+            "step": 1,
+            "label": "Star rating",
+            "default": 5
+          },
+          {
+            "type": "textarea",
+            "id": "testimonial",
+            "label": "Testimonial",
+            "default": "Add customer reviews and testimonials to showcase your store’s happy customers.",
+            "info": "For best results, keep the word count similar in each quote"
+          },
+          {
+            "type": "text",
+            "id": "author",
+            "label": "Author",
+            "default": "Author's name"
+          },
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image",
+            "info": "1000 x 800px recommended"
+          },
+          {
+            "type": "select",
+            "id": "image_alignment",
+            "label": "Image alignment",
+            "info": "Used to keep the subject of your focus in view, if cropped to a fixed shape",
+            "default": "center center",
+            "options": [
+              {
+                "value": "top left",
+                "label": "Top left"
+              },
+              {
+                "value": "top center",
+                "label": "Top center"
+              },
+              {
+                "value": "top right",
+                "label": "Top right"
+              },
+              {
+                "value": "center left",
+                "label": "Middle left"
+              },
+              {
+                "value": "center center",
+                "label": "Middle center"
+              },
+              {
+                "value": "center right",
+                "label": "Middle right"
+              },
+              {
+                "value": "bottom left",
+                "label": "Bottom left"
+              },
+              {
+                "value": "bottom center",
+                "label": "Bottom center"
+              },
+              {
+                "value": "bottom right",
+                "label": "Bottom right"
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "id": "image_caption",
+            "label": "Image caption"
+          },
+          {
+            "type": "url",
+            "id": "link",
+            "label": "Image link"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Testimonials",
+        "settings": {},
+        "blocks": [
+          {
+            "type": "testimonial",
+            "settings": {
+            }
+          },
+          {
+            "type": "testimonial",
+            "settings": {
+            }
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

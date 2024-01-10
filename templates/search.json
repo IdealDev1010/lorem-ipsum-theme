@@ -1,0 +1,18 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-search",
+      "disabled": true,
+      "settings": {}
+    },
+    "910a27f6-98e1-43cd-bd3e-4118f9ac9030": {
+      "type": "apps",
+      "settings": {}
+    }
+  },
+  "order": [
+    "910a27f6-98e1-43cd-bd3e-4118f9ac9030",
+    "main"
+  ],
+  "wrapper": ".boost-sd__product-filter-fallback"
+}

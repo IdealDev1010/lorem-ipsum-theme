@@ -1,0 +1,299 @@
+<div id="section-id-{{ section.id }}" class="{% unless section.settings.full_width %}container fully-spaced-row{% endunless %}" data-section-type="background-video" data-cc-animate>
+  {% style %}
+    #section-id-{{ section.id }} .video-container {
+      height: {{ section.settings.height_mobile }}px;
+    }
+    #section-id-{{ section.id }} .overlay-text__title {
+      font-size: {{ section.settings.title_size_mobile }}px;
+      {%- if section.settings.title_size_mobile >= 90 -%}
+      line-height: 1em;
+      {%- endif %}
+    }
+    @media (min-width: 768px) {
+      #section-id-{{ section.id }} .video-container {
+        height: {{ section.settings.height_desktop }}px;
+      }
+      #section-id-{{ section.id }} .overlay-text__title {
+        {%- assign title_size_medium = section.settings.title_size | times: 0.7 | at_least: section.settings.title_size_mobile -%}
+        font-size: {{ title_size_medium }}px;
+        {%- if title_size_medium >= 90 -%}
+        line-height: 1em;
+        {%- endif %}
+      }
+    }
+    @media (min-width: 1100px) {
+      #section-id-{{ section.id }} .overlay-text__title {
+        font-size: {{ section.settings.title_size }}px;
+        {%- if section.settings.title_size >= 90 -%}
+        line-height: 1em;
+        {%- endif %}
+      }
+    }
+  {% endstyle %}
+
+  {% if section.settings.video != blank %}
+    <div class="height--fixed video-container video-container--background image-overlay image-overlay--bg-{{ section.settings.overlay_style }}"
+      data-video-url="{{ section.settings.video | escape }}"
+      data-video-autoplay="true"
+      data-video-loop="true"
+      data-cc-animate>
+      <div class="video-container__video"></div>
+      {% if section.settings.placeholder_image %}
+        <div class="video-container__fallback rimage-outer-wrapper rimage-background lazyload fade-in"
+          data-bgset="{% render 'bgset', image: section.settings.placeholder_image %}"
+          data-sizes="auto"
+          data-parent-fit="cover">
+          <noscript>
+            <div class="rimage-wrapper" style="padding-top:{{ 1 | divided_by: section.settings.placeholder_image.aspect_ratio | times: 100 }}%">
+              <img src="{{ section.settings.placeholder_image | img_url: '1024x1024' }}" alt="{{ section.settings.placeholder_image.alt | escape }}" class="rimage__image">
+            </div>
+          </noscript>
+        </div>
+      {% endif %}
+
+      {%- assign show_overlay_text = false -%}
+      {%- if section.settings.title != blank or section.settings.subheading != blank or section.settings.text != blank or section.settings.button_label_1 != blank or section.settings.button_label_2 != blank -%}
+        {%- assign show_overlay_text = true -%}
+      {%- endif -%}
+
+      {%- if show_overlay_text -%}
+        <div class="overlay-text overlay-text--for-banner overlay--v-{{ section.settings.text_alignment | split: ' ' | first }} overlay--h-{{ section.settings.text_alignment | split: ' ' | last }} image-overlay__over">
+          <div class="overlay-text__inner">
+            <div class="overlay-text__text" data-cc-animate="cc-fade-in-up" data-cc-animate-delay="0.5s">
+              {%- if section.settings.subheading != blank -%}
+                <div class="overlay-text__subheading subheading subheading--over">{{ section.settings.subheading | escape }}</div>
+              {%- endif -%}
+              {%- if section.settings.title != blank -%}
+                {% if section.settings.use_h1 %}
+                  <h1 class="overlay-text__title">{% render 'multiline-text' with section.settings.title %}</h1>
+                {% else %}
+                  <h2 class="overlay-text__title h1-style">{% render 'multiline-text' with section.settings.title %}</h2>
+                {% endif %}
+              {%- endif -%}
+              {%- if section.settings.text != blank -%}
+                <div class="overlay-text__rte rte {% if section.settings.enlarge_text %}large-text{% endif %}">{{ section.settings.text }}</div>
+              {%- endif -%}
+              {%- if section.settings.button_label_1 != blank or section.settings.button_label_2 != blank -%}
+                <div class="overlay-text__button-row">
+                  {%- if section.settings.button_label_1 != blank -%}
+                    <a class="overlay-text__button button altcolour" href="{{ section.settings.button_url_1 }}">{{ section.settings.button_label_1 | escape }}</a>
+                  {%- endif -%}
+                  {%- if section.settings.button_label_2 != blank -%}
+                    <a class="overlay-text__button button altcolour" href="{{ section.settings.button_url_2 }}">{{ section.settings.button_label_2 | escape }}</a>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+  {% else %}
+    <div class="fully-padded-row--large align-center">{{ 'homepage.onboarding.no_content' | t }}</div>
+  {% endif %}
+</div>
+
+
+{% schema %}
+  {
+    "name": "Background video",
+    "class": "section-background-video",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Background videos play on loop, with no sound. If you need a video with sound use the Video section."
+      },
+      {
+        "id": "video",
+        "type": "text",
+        "label": "Video link",
+        "info": "Supports mp4, YouTube and Vimeo. Please read documentation before using. [Read more](https://cleancanvas.co.uk/support/general/background-video)",
+        "default": "https:\/\/www.youtube.com\/watch?v=_9VUPq3SxOc"
+      },
+      {
+        "id": "placeholder_image",
+        "type": "image_picker",
+        "label": "Placeholder image",
+        "info": "Required. Shows while the video is loading, or if it cannot autoplay."
+      },
+      {
+        "type": "text",
+        "id": "subheading",
+        "label": "Subheading",
+        "default": "Tell your story"
+      },
+      {
+        "type": "textarea",
+        "id": "title",
+        "label": "Heading",
+        "default": "Background video"
+      },
+      {
+        "type": "range",
+        "id": "title_size",
+        "min": 20,
+        "max": 150,
+        "step": 2,
+        "unit": "px",
+        "label": "Desktop heading text size",
+        "default": 84
+      },
+      {
+        "type": "range",
+        "id": "title_size_mobile",
+        "min": 20,
+        "max": 150,
+        "step": 2,
+        "unit": "px",
+        "label": "Mobile heading text size",
+        "default": 32
+      },
+      {
+        "type": "checkbox",
+        "id": "use_h1",
+        "label": "Set as primary page heading",
+        "info": "Use <h1> tag. One per page recommended. [Read more](https://cleancanvas.co.uk/support/symmetry/section-h1-setting)",
+        "default": false
+      },
+      {
+        "type": "richtext",
+        "id": "text",
+        "label": "Text",
+        "default": "<p>Use a video to get a customer's attention<\/p>"
+      },
+      {
+        "type": "checkbox",
+        "id": "enlarge_text",
+        "label": "Enlarge text",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "button_label_1",
+        "label": "Button 1 label"
+      },
+      {
+        "type": "url",
+        "id": "button_url_1",
+        "label": "Button 1 link"
+      },
+      {
+        "type": "text",
+        "id": "button_label_2",
+        "label": "Button 2 label"
+      },
+      {
+        "type": "url",
+        "id": "button_url_2",
+        "label": "Button 2 link"
+      },
+      {
+        "type": "select",
+        "id": "text_alignment",
+        "label": "Text overlay position",
+        "options": [
+          {
+            "value": "top left",
+            "label": "Top left"
+          },
+          {
+            "value": "top center",
+            "label": "Top center"
+          },
+          {
+            "value": "top right",
+            "label": "Top right"
+          },
+          {
+            "value": "center left",
+            "label": "Middle left"
+          },
+          {
+            "value": "center center",
+            "label": "Middle center"
+          },
+          {
+            "value": "center right",
+            "label": "Middle right"
+          },
+          {
+            "value": "bottom left",
+            "label": "Bottom left"
+          },
+          {
+            "value": "bottom center",
+            "label": "Bottom center"
+          },
+          {
+            "value": "bottom right",
+            "label": "Bottom right"
+          }
+        ],
+        "default": "center center"
+      },
+      {
+        "type": "header",
+        "content": "Layout"
+      },
+      {
+        "type": "range",
+        "id": "height_desktop",
+        "min": 200,
+        "max": 1000,
+        "step": 20,
+        "unit": "px",
+        "label": "Desktop fixed height",
+        "default": 600
+      },
+      {
+        "type": "range",
+        "id": "height_mobile",
+        "min": 100,
+        "max": 1000,
+        "step": 20,
+        "unit": "px",
+        "label": "Mobile fixed height",
+        "default": 500
+      },
+      {
+        "id": "full_width",
+        "type": "checkbox",
+        "label": "Full page width",
+        "default": true
+      },
+      {
+        "id": "overlay_style",
+        "type": "select",
+        "label": "Overlay style",
+        "default": "shadow",
+        "options": [
+          {
+            "value": "full",
+            "label": "Tint"
+          },
+          {
+            "value": "box",
+            "label": "Box"
+          },
+          {
+            "value": "shadow",
+            "label": "Text shadow"
+          },
+          {
+            "value": "full image-overlay--bg-shadow",
+            "label": "Text shadow and tint"
+          },
+          {
+            "value": "no_background",
+            "label": "No background"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Background video"
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,34 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-contact",
+      "blocks": {
+        "name": {
+          "type": "name_input",
+          "settings": {
+            "half_width": true
+          }
+        },
+        "email": {
+          "type": "email_input",
+          "settings": {
+            "half_width": true
+          }
+        },
+        "message": {
+          "type": "message_input",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "name",
+        "email",
+        "message"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

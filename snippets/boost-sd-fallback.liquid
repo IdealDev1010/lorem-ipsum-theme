@@ -1,0 +1,59 @@
+<script>
+  const boostSDAssetFileURL = {{ 'boost_sd_assets_file_url.gif' | asset_url | json }};
+  window.boostSDAssetFileURL = boostSDAssetFileURL;
+
+  if (window.boostSDAppConfig) {
+    window.boostSDAppConfig.generalSettings.custom_js_asset_url = "{{ 'boost-sd-custom.js' | asset_url }}";
+    window.boostSDAppConfig.generalSettings.custom_css_asset_url = "{{ 'boost-sd-custom.css' | asset_url }}";
+  }
+
+  {% if request.page_type == 'collection' or request.page_type == 'search' %}
+  window.addEventListener('DOMContentLoaded', async () => {
+    {% assign products_per_page = 24 %}
+    {% if request.page_type == 'collection' %}
+      {% paginate collection.products by products_per_page %}
+        window.boostSDFallback = {
+          productPerPage: {{ products_per_page }},
+          products: {{ collection.products | json }},
+          collection: {
+            title: {{ collection.title | json}}
+          },
+          pagination: {{ paginate | json }},
+          moneyFormatWithCurrency: {{ shop.money_with_currency_format | replace: "'", '"' | json }},
+          sortBy: {{ collection.sort_by | json  }},
+          defaultSortBy: {{collection.default_sort_by | json}},
+          sortOptions: {{ collection.sort_options | json  }}
+        };{% endpaginate %}
+      {% endif %}
+
+    {% if request.page_type == 'search' %}
+      {% paginate search.results by products_per_page %}
+        let searchResult = [];
+        {% for result in search.results %}
+          {% if result.object_type == 'product' %}searchResult.push({{result | json}});{% endif %}
+          {% if result.object_type == 'page' %}searchResult.push({resultType: 'page', title: {{result.title|json}}, url: {{result.url|json}}});{% endif %}
+          {% if result.object_type == 'article' %}searchResult.push({resultType: 'article', title: {{result.title|json}}, url: {{result.url|json}}, image: {{result.image|json}}});{% endif %}
+        {% endfor %}
+        window.boostSDFallback = {
+          productPerPage: {{ products_per_page }},
+          products: searchResult,
+          collection: {
+            title: {{ collection.title | json }}
+          },
+          pagination: {{ paginate | json }},
+          moneyFormatWithCurrency: {{ shop.money_with_currency_format | replace: "'", '"' | json }},
+          sortBy: {{ search.sort_by | json  }},
+          defaultSortBy: {{search.default_sort_by | json}},
+          sortOptions: {{ search.sort_options | json  }}
+        };{% endpaginate %}
+      {% endif %}
+
+      const cdn = window.boostSDAppConfig?.api?.cdn || 'https://boost-cdn-prod.bc-solutions.net';
+
+      const script = document.createElement("script");
+      script.src = `${cdn}/fallback-theme/1.0.12/boost-sd-fallback-theme.js`;
+      script.defer = true;
+
+      document.body.appendChild(script);
+    });{% endif %}
+</script>

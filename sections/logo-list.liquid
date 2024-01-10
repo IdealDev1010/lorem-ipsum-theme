@@ -1,0 +1,156 @@
+<div id="section-id-{{ section.id }}" class="{% if section.settings.use_alt_bg %}use-alt-bg fully-padded-row--medium{% else %}fully-spaced-row--medium{% endif %}" data-section-type="logo-list">
+  {%- style -%}
+    #section-id-{{ section.id }} .logo-list__logo-image {
+      opacity: {{ section.settings.image_opacity }}%;
+    }
+    #section-id-{{ section.id }} .logo-list__link:hover .logo-list__logo-image {
+      opacity: {{ section.settings.image_opacity | times: 1.2 | at_most: 100 }}%;
+    }
+    {%- for block in section.blocks -%}
+      #section-id-{{ section.id }} .logo-list__logo-{{ forloop.index }} .logo-list__logo-image {
+        max-width: {{ block.settings.image_width }}px;
+      }
+    {%- endfor -%}
+  {%- endstyle -%}
+
+  <div class="container">
+    <h2 class="hometitle h4-style align-center spaced-row" data-cc-animate data-cc-animate-delay="0.15s">
+      {{ section.settings.title | escape }}
+    </h2>
+
+    <div class="logo-list-container">
+      <div class="logo-list logo-list--count-{{ section.blocks.size }}">
+        {%- for block in section.blocks -%}
+          {%- if block.settings.link != blank -%}
+            <a class="logo-list__logo logo-list__logo-{{ forloop.index }} logo-list__link" href="{{ block.settings.link }}" {{ block.shopify_attributes }} data-cc-animate="cc-fade-in-up" data-cc-animate-delay="{{ forloop.index | times: 0.15 }}s">
+          {%- else -%}
+            <div class="logo-list__logo logo-list__logo-{{ forloop.index }}" {{ block.shopify_attributes }} data-cc-animate="cc-fade-in-up" data-cc-animate-delay="{{ forloop.index | times: 0.15 }}s">
+          {%- endif -%}
+
+            <div class="logo-list__logo-image">
+              {%- if block.settings.image != blank -%}
+                <div class="rimage-outer-wrapper" style="max-width: {{ block.settings.image.width }}px">
+                  <div class="rimage-wrapper lazyload--placeholder" style="padding-top: {{ 1 | divided_by: block.settings.image.aspect_ratio | times: 100 }}%">
+                    {%- assign img_url = block.settings.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+                    <img class="rimage__image lazyload fade-in"
+                      data-src="{{ img_url }}"
+                      data-widths="[{{ block.settings.image_width }}, {{ block.settings.image_width | times: 2}}]"
+                      data-aspectratio="{{ block.settings.image.aspect_ratio }}"
+                      data-sizes="auto"
+                      alt="{{ block.settings.image.alt | escape }}">
+                    <noscript>
+                      {%- capture image_width_key -%}{{ block.settings.image_width }}x{%- endcapture -%}
+                      <img class="rimage__image" src="{{ block.settings.image | img_url: image_width_key }}" alt="{{ image.alt | escape }}">
+                    </noscript>
+                  </div>
+                </div>
+              {%- else -%}
+                <div class="placeholder-image">
+                  {{- 'logo' | placeholder_svg_tag: 'placeholder-svg' -}}
+                </div>
+              {%- endif -%}
+            </div>
+
+            {%- if block.settings.title != blank -%}
+              <div class="logo-list__logo-title">
+                {{ block.settings.title | escape }}
+              </div>
+            {%- endif -%}
+
+          {%- unless block.settings.link != blank -%}
+            </div>
+          {%- else -%}
+          </a>
+          {%- endunless -%}
+        {%- endfor -%}
+
+        {% if section.blocks.size == 0 %}
+          {%- for i in (1..4) -%}
+            <div class="logo-list__logo">
+              <div class="logo-list__logo-image">
+                <div class="placeholder-image">
+                  {{- 'logo' | placeholder_svg_tag: 'placeholder-svg' -}}
+                </div>
+              </div>
+            </div>
+          {%- endfor -%}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% schema %}
+{
+  "name": "Logo list",
+  "class": "section-logo-list",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Logo list"
+    },
+    {
+      "type": "range",
+      "id": "image_opacity",
+      "label": "Logo opacity",
+      "min": 20,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 75
+    },
+    {
+      "type": "checkbox",
+      "id": "use_alt_bg",
+      "label": "Use alternate section color",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "logo",
+      "name": "Logo",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "range",
+          "id": "image_width",
+          "label": "Logo width",
+          "min": 40,
+          "max": 280,
+          "step": 10,
+          "unit": "px",
+          "default": 160
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "info": "Optional"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Logo list",
+      "settings": {
+      },
+      "blocks": [
+      ]
+    }
+  ]
+}
+{% endschema %}

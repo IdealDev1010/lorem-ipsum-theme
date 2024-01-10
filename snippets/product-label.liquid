@@ -1,0 +1,88 @@
+{% comment %}
+{%- capture label_html -%}
+{%- assign label_count = 0 -%}
+{%- if product.metafields.theme.label != blank -%}
+{%- assign label_count = label_count | plus: 1 -%}
+<span class="product-label product-label--meta">
+<span>{{ product.metafields.theme.label | escape }}</span>
+</span>
+{%- endif -%}
+
+{%- liquid
+if settings.prod_new_show
+if settings.prod_new_method == 'date'
+assign now_s = 'now' | date: '%s' | plus: 0
+assign pub_s = product.created_at | date: '%s' | plus: 0
+assign diff_days = now_s | minus: pub_s | divided_by: 86400
+
+if diff_days < settings.prod_new_limit_int
+assign new_label_text = 'products.labels.new_in' | t
+endif
+elsif settings.prod_new_method == 'tag'
+if product.tags contains 'New'
+assign new_label_text = 'products.labels.new_in' | t
+endif
+else
+for collection in product.collections
+assign split_collection_handle = collection.handle | split: '-'
+if split_collection_handle contains 'new'
+assign new_label_text = 'products.labels.new_in' | t
+break
+endif
+endfor
+endif
+endif
+-%}
+{%- if new_label_text -%}
+{%- assign label_count = label_count | plus: 1 -%}
+<span class="product-label product-label--new-in">
+<span>{{ new_label_text }}</span>
+</span>
+{%- endif -%}
+
+{%- liquid
+if label_count < 2 and settings.prod_reduction_show and cheapest_variant.compare_at_price > cheapest_variant.price
+if settings.prod_reduction_type == 'percent'
+assign amount = 1.0 | times: cheapest_variant.price | divided_by: cheapest_variant.compare_at_price
+assign amount = 1.0 | minus: amount
+assign amount = amount | times: 100.0 | round
+assign sale_label_text = 'products.labels.percent_reduction' | t: amount: amount
+else
+assign amount = cheapest_variant.compare_at_price | minus: cheapest_variant.price | money
+assign sale_label_text = 'products.labels.value_reduction_html' | t: amount: amount
+endif
+assign label_count = label_count | plus: 1
+endif
+-%}
+{%- if sale_label_text -%}
+<span class="product-label product-label--sale">
+<span>{{ sale_label_text }}</span>
+</span>
+{%- endif -%}
+
+{%- if label_count < 2 and settings.prod_stock_warn_show and settings.prod_stock_warn_limit_int == 0 and product.variants.size == 1 and product.variants.first.inventory_management != blank and product.variants.first.inventory_quantity > 0 -%}
+{%- assign label_count = label_count | plus: 1 -%}
+<span class="product-label product-label--stock">
+<span>{{ 'products.labels.only_x_left' | t: quantity: product.variants.first.inventory_quantity }}</span>
+</span>
+{%- elsif label_count < 2 and settings.prod_stock_warn_show and product.variants.size == 1 and product.variants.first.inventory_management != blank and product.variants.first.inventory_quantity > 0 and product.variants.first.inventory_quantity <= settings.prod_stock_warn_limit_int -%}
+{%- assign label_count = label_count | plus: 1 -%}
+<span class="product-label product-label--stock">
+<span>{{ 'products.labels.only_x_left' | t: quantity: product.variants.first.inventory_quantity }}</span>
+</span>
+{%- endif -%}
+{%- endcapture -%}
+
+{%- if label_html != blank -%}
+<div class="product-label-container">
+{{- label_html -}}
+</div>
+{%- endif -%}
+{% endcomment %}
+{% if cheapest_variant.compare_at_price > cheapest_variant.price %}
+  <div class="product-label-container">
+    <span class="product-label product-label--sale">
+      SALE
+    </span>
+  </div>
+{% endif %}

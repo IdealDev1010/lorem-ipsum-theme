@@ -1,0 +1,32 @@
+<div class="fully-spaced-row--medium">
+  {%- unless section.settings.full_width -%}<div class="container">{%- endunless -%}
+    {%- for block in section.blocks -%}
+      {% render block %}
+    {%- endfor -%}
+  {%- unless section.settings.full_width -%}</div>{%- endunless -%}
+</div>
+
+{% schema %}
+{
+  "name": "Apps",
+  "class": "section-apps",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Wide display",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Apps"
+    }
+  ]
+}
+{% endschema %}

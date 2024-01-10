@@ -1,0 +1,98 @@
+<div data-section-type="faq-header">
+  <div class="container">
+    <div class="faq-header">
+      {% if section.settings.show_index %}
+        <div class="faq-index js">
+          <div class="faq-index__sticky-container">
+            <div class="faq-index__item-container">
+              {% if section.settings.index_heading != blank %}
+                <div class="faq-index__heading">{{ section.settings.index_heading }}</div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endif %}
+
+      <div class="faq-header__content">
+        {% if section.settings.title != blank %}
+          {% if section.settings.use_h1 %}
+            <h1 id="{{ section.id }}">{{ section.settings.title | escape }}</h1>
+          {% else %}
+            <h2 id="{{ section.id }}" class="h1-style">{{ section.settings.title | escape }}</h2>
+          {% endif %}
+        {% endif %}
+
+        {% if section.settings.text != blank %}
+          <div class="rte">{{ section.settings.text }}</div>
+        {% endif %}
+
+        {% if section.settings.show_search %}
+          <div class="faq-search js">
+            <span class="faq-search__icon">{% render 'svg-search' %}</span>
+            <input type="text" class="faq-search__input" autocomplete="off" placeholder="{{ 'faq.search.placeholder' | t | escape }}" aria-label="{{ 'faq.search.label' | t | escape }}">
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% schema %}
+  {
+    "name": "FAQ header",
+    "class": "section-faq-header",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Place this section above Collapsible tab sections to provide quick links and search. You may use multiple Collapsible tabs."
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title",
+        "default": "FAQ"
+      },
+      {
+        "type": "checkbox",
+        "id": "use_h1",
+        "label": "Set as primary page heading",
+        "info": "Uses <h1> tag (used for SEO and accessibility). One per page recommended.",
+        "default": false
+      },
+      {
+        "type": "richtext",
+        "id": "text",
+        "label": "Description"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_search",
+        "label": "Show search",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Index column"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_index",
+        "label": "Show index column",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "index_heading",
+        "label": "Heading",
+        "default": "How can we help?"
+      }
+    ],
+    "presets": [
+      {
+        "name": "FAQ header",
+        "settings": {}
+      }
+    ]
+  }
+{% endschema %}

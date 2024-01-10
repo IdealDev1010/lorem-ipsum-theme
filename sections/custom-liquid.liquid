@@ -1,0 +1,32 @@
+<div id="section-id-{{ section.id }}" class="{% unless section.settings.full_width %}container{% endunless %} fully-spaced-row--medium section-id-{{ section.id }}" data-section-type="custom-liquid">
+  <div class="custom-html">
+    {{ section.settings.code }}
+  </div>
+</div>
+
+
+{% schema %}
+  {
+    "name": "Custom Liquid",
+    "settings": [
+      {
+        "id": "full_width",
+        "type": "checkbox",
+        "label": "Full page width",
+        "default": true
+      },
+      {
+        "type": "liquid",
+        "id": "code",
+        "label": "Custom Liquid"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Custom Liquid",
+        "settings": {
+        }
+      }
+    ]
+  }
+{% endschema %}

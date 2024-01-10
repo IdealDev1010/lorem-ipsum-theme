@@ -1,0 +1,296 @@
+{% if section.settings.show_featured_image and article.image != blank %}
+  <div class="article-image article-image--large align-center {% unless section.settings.full_width_image %}container{% endunless %}">
+    {% if section.settings.featured_image_height == 'natural' %}
+      <div class="page-header page-header--with-background {% if section.settings.enable_title_overlay %}image-overlay image-overlay--bg-{{ section.settings.overlay_style }}{% endif %}">
+        <div class="rimage-background-wrapper lazyload--placeholder">
+          <div class="rimage-outer-wrapper rimage-background lazyload fade-in"
+              data-bgset="{% render 'bgset', image: article.image %}"
+              data-sizes="auto"
+              data-parent-fit="cover">
+            <div class="rimage-wrapper" style="padding-top:{{ 1 | divided_by: article.image.aspect_ratio | times: 100 }}%"></div>
+            <noscript>
+              <div class="rimage-wrapper" style="padding-top:{{ 1 | divided_by: article.image.aspect_ratio | times: 100 }}%">
+                <img src="{{ article.image | img_url: '1024x1024' }}" alt="{{ article.image.alt | escape }}" class="rimage__image">
+              </div>
+            </noscript>
+          </div>
+        </div>
+
+        {% if section.settings.enable_title_overlay %}
+          <div class="overlay-text overlay--v-center overlay--h-center image-overlay__over" data-cc-animate data-cc-animate-delay="0.2s">
+            <div class="overlay-text__inner">
+              <div class="overlay-text__text">
+                <h1 class="overlay-text__title super-large-text">{{ article.title | escape }}</h1>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+    {% else %}
+      <div class="page-header page-header--with-background {% if section.settings.enable_title_overlay %}image-overlay image-overlay--bg-{{ section.settings.overlay_style }}{% endif %} page-header--padded-{{ section.settings.featured_image_height }} rimage-wrapper">
+        <div class="rimage-background lazyload fade-in"
+          data-bgset="{% render 'bgset', image: article.image %}"
+          data-sizes="auto"
+          data-parent-fit="cover"></div>
+
+        {% if section.settings.enable_title_overlay %}
+          <div class="overlay-text overlay-text--inline overlay--v-center overlay--h-center image-overlay__over" data-cc-animate data-cc-animate-delay="0.2s">
+            <div class="overlay-text__inner">
+              <div class="overlay-text__text">
+                <h1 class="overlay-text__title super-large-text">{{ article.title | escape }}</h1>
+              </div>
+            </div>
+          </div>
+        {% else %}
+          <div class="overlay-text overlay-text--inline">{% comment %}For padding{% endcomment %}</div>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+{% endif %}
+
+{% if section.settings.enable_title_overlay == false or section.settings.show_featured_image == false or article.image == blank %}
+  <div class="container" data-cc-animate>
+      <div class="page-header cf">
+        <h1 class="majortitle">{{ article.title | escape }}</h1>
+      </div>
+  </div><!-- /.pagetitle -->
+{% endif %}
+
+<div class="article">
+  <div class="container">
+
+    <div class="rte cf spaced-row" data-cc-animate>
+      {{ article.content }}
+    </div>
+
+    {% if section.settings.show_sharing_icons %}
+    <div class="lightly-spaced-row" data-cc-animate>
+      {% render 'social-sharing', share_title: article.title, share_permalink: article.url, share_image: article.image %}
+    </div>
+    {% endif %}
+
+    <div class="meta" data-cc-animate>
+      <span class="iconmeta time">
+        {% if section.settings.show_date %}
+          {{ article.published_at | date: format: 'month_date_year' }}
+        {% endif %}
+        {% if section.settings.show_author %}
+          {% if section.settings.show_date %}&mdash;{% endif %}
+          <span class="author">{{ article.author }}</span>
+        {% endif %}
+      </span>
+
+      {% if section.settings.show_article_tags %}
+      {% capture tag_markup %}
+      <div class="iconmeta tags">
+        <span class="label">{{ 'blogs.article.tags' | t }}:</span>
+        {% for tag in article.tags %}
+          {{ tag | link_to_tag: tag }}
+        {% endfor %}
+      </div>
+      {% endcapture %}
+      {% if tag_markup contains '</a>' %}{{ tag_markup }}{% endif %}
+      {% endif %}
+    </div>
+
+    <div class="pagination-row pagination-row-tabular" data-cc-animate>
+      <span class="prev">
+        {% if blog.previous_article %}
+        <a href="{{ blog.previous_article }}"><span class="icon--small icon-natcol ltr-icon">{% render 'svg-chevron-left' %}</span> <span>{{ 'blogs.article.older_post' | t }}</span></a>
+        {% endif %}
+      </span>
+
+      <span class="back">{{ 'blogs.article.back_to_blog_html' | t: blog: blog.title | link_to: blog.url }}</span>
+
+      <span class="next">
+        {% if blog.next_article %}
+        <a href="{{ blog.next_article }}"><span>{{ 'blogs.article.newer_post' | t }}</span> <span class="icon--small icon-natcol ltr-icon">{% render 'svg-chevron-right' %}</span></a>
+        {% endif %}
+      </span>
+    </div>
+
+  </div><!-- /.container -->
+</div><!-- /.article -->
+
+{% if blog.comments_enabled? %}
+    {% paginate article.comments by 50 %}
+        {% if article.comments != blank %}
+        <div id="comments" class="container cf padded-row" data-cc-animate>
+            <h4 class="align-centre">{{ 'blogs.comments.title' | t }}</h4>
+
+            {% comment %} Show a comment that was *just* submitted {% endcomment %}
+            {% if comment and comment.status != 'published' %}
+                <div class="comment spaced-row">
+                  <p class="author">{{ 'blogs.comments.author_meta_said' | t: author: comment.author }}</p>
+                  <div class="text">{{ comment.content }}</div>
+                </div>
+            {% endif %}
+
+            {% comment %} Loop through approved comments: {% endcomment %}
+            {% for comment in article.comments %}
+                <div class="comment spaced-row {% if forloop.first %}first{% endif %}">
+                  <p class="author">{{ 'blogs.comments.author_meta_said' | t: author: comment.author }}</p>
+                  <div class="text">{{ comment.content }}</div>
+                </div>
+            {% endfor %}
+        </div> <!-- /#comments -->
+
+        <div class="container pagination-row" data-cc-animate>{% render 'pagination-control', paginate: paginate %}</div>
+        {% endif %}
+    {% endpaginate %}
+
+    <div id="template" class="form container container--reading-width" data-cc-animate>
+        {% form article %}
+        <h4 id="add-comment-title">{{ 'blogs.comments.form_title' | t }}</h4>
+
+        {% if form.posted_successfully? %}
+        <p>{{ 'blogs.comments.success' | t }}</p>
+        {% endif %}
+
+        {% if blog.moderated? %}
+        <p>{{ 'blogs.comments.moderated' | t }}</p>
+        {% endif %}
+
+        {% if form.errors %}
+            <ul class="errors">
+            {% for field in form.errors %}
+                <li>{{ field | capitalize }} {{ form.errors.messages[field] }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+
+        <div class="input-row {% if form.errors contains 'author' %}has-error{% endif %}">
+            <label for="comment_author">{{ 'blogs.comments.name' | t }}</label>
+            <input type="text" id="comment_author" name="comment[author]" size="40" value="{{form.author}}" />
+        </div>
+        <div class="input-row {% if form.errors contains 'email' %}has-error{% endif %}">
+            <label for="comment_email">{{ 'blogs.comments.email' | t }}</label>
+            <input type="email" id="comment_email" name="comment[email]" size="40" value="{{form.email}}" />
+        </div>
+        <div class="input-row {% if form.errors contains 'body' %}has-error{% endif %}">
+            <label for="comment_body">{{ 'blogs.comments.message' | t }}</label>
+            <textarea id="comment_body" name="comment[body]" cols="40" rows="5">{{form.body}}</textarea>
+        </div>
+
+        <div class="action_bottom">
+            <button type="submit" id="comment-submit" class="btn">{{ 'blogs.comments.post' | t }}</button>
+        </div>
+
+        {% endform %}
+    </div> <!-- /.form -->
+{% endif %}
+
+{% render 'structured-data-article', article: article %}
+
+{% schema %}
+  {
+    "name": "Article pages",
+    "class": "page-section-spacing",
+    "settings": [
+  	  {
+        "type": "checkbox",
+        "id": "show_date",
+        "label": "Show date",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_author",
+        "label": "Show author",
+        "default": true
+      },
+  	  {
+        "type": "checkbox",
+        "id": "show_article_tags",
+        "label": "Show article tags",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_sharing_icons",
+        "label": "Show social sharing icons",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Featured image"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_featured_image",
+        "label": "Show featured image",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "full_width_image",
+        "label": "Full width",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "featured_image_height",
+        "label": "Height",
+        "options": [
+          {
+            "value": "small",
+            "label": "Compact"
+          },
+          {
+            "value": "medium",
+            "label": "Small"
+          },
+          {
+            "value": "large",
+            "label": "Medium"
+          },
+          {
+            "value": "huge",
+            "label": "Large"
+          },
+          {
+            "value": "natural",
+            "label": "Natural"
+          }
+        ],
+        "default": "huge"
+      },
+  	  {
+        "type": "checkbox",
+        "id": "enable_title_overlay",
+        "label": "Show title over featured image",
+        "default": false
+      },
+      {
+        "id": "overlay_style",
+        "type": "select",
+        "label": "Overlay style",
+        "default": "shadow",
+        "options": [
+          {
+            "value": "full",
+            "label": "Tint"
+          },
+          {
+            "value": "box",
+            "label": "Box"
+          },
+          {
+            "value": "shadow",
+            "label": "Text shadow"
+          },
+          {
+            "value": "full image-overlay--bg-shadow",
+            "label": "Text shadow and tint"
+          },
+          {
+            "value": "no_background",
+            "label": "No background"
+          }
+        ]
+      }
+	  ]
+  }
+{% endschema %}

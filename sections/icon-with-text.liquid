@@ -1,0 +1,57 @@
+<style>
+    #iwt--{{ section.id }} {
+        background-color: {{ section.settings.back_color }};
+        padding: 30px 0px;
+        justify-content: space-evenly;
+    }
+</style>
+<div class="">
+    <div class="icon-with-text" id="iwt--{{ section.id }}">
+        {% for block in section.blocks %}
+            <div class="icon-with-text__item">
+                <span class="icon-with-text__icon">
+                    {{ block.settings.icon }}
+                </span>
+                <span class="icon-with-text__caption">
+                    {{ block.settings.label }}
+                </span>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% schema %}
+    {
+        "name": "Icon with text",
+        "settings": [
+            {
+                "type": "color",
+                "id": "back_color",
+                "label": "Background Color",
+                "default": "#004289"
+            }
+        ],
+        "blocks": [
+            {
+                "type": "icon",
+                "name": "Icon",
+                "settings": [
+                    {
+                        "type": "html",
+                        "id": "icon",
+                        "label": "Icon"
+                    },
+                    {
+                        "type": "textarea",
+                        "id": "label",
+                        "label": "Icon Label"
+                    }
+                ]
+            }
+        ],
+        "presets": [
+            {
+                "name": "Icon with text"
+            }
+        ]
+    }
+{% endschema %}

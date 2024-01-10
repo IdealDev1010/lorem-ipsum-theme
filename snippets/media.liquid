@@ -1,0 +1,45 @@
+<div id="FeaturedMedia-{{ section.id }}-{{ media.id }}-wrapper"
+    class="product-media-wrapper"
+    data-media-id="{{ section.id }}-{{ media.id }}"
+    tabindex="-1">
+  {% case media.media_type %}
+    {% when 'image' %}
+      <div class="product-media product-media--image">
+        {% render 'responsive-image', image: media.preview_image, min_aspect_ratio: min_aspect_ratio %}
+      </div>
+    {% when 'external_video', 'video' %}
+      <div class="product-media product-media--video product-media--frame"
+          data-video-type="external"
+          data-video-id="{{ media.external_id }}"
+          data-enable-video-looping="{{ section.settings.enable_video_looping }}"
+          style="padding-bottom: {{ 1 | divided_by: media.preview_image.aspect_ratio | times: 100 }}%">
+        <div class="product-media__poster lazyload--placeholder">
+          <div class="rimage-background lazyload fade-in"
+            data-bgset="{% render 'bgset', image: media.preview_image %}"
+            data-sizes="auto"
+            data-parent-fit="cover"></div>
+          <button class="product-media__video-play-btn" aria-label="{{ 'general.accessibility_labels.video_play' | t | escape }}">{% render 'icon-video-badge-full-color' %}</button>
+        </div>
+        <script class="product-media__video-template" type="text/template">
+          {%- if media.media_type == 'video' -%}
+            {{ media | media_tag: image_size: '1024x', loop: section.settings.enable_video_looping, controls: true, preload: 'none', aspect-ratio: media.aspect_ratio }}
+          {%- else -%}
+            {%- assign video_class = 'js-' | append: media.host -%}
+            {%- if media.host == 'youtube' -%}
+              {{ media | external_video_url: loop: section.settings.enable_video_looping, playlist: media.external_id | external_video_tag: class: video_class, loading: 'lazy', aspect-ratio: media.aspect_ratio }}
+            {%- else -%}
+              {{ media | external_video_url: loop: section.settings.enable_video_looping | external_video_tag: class: video_class, loading: 'lazy', aspect-ratio: media.aspect_ratio }}
+            {%- endif -%}
+          {%- endif -%}
+        </script>
+      </div>
+    {% when 'model' %}
+      <div class="product-media product-media--model product-media--frame" style="padding-bottom: 100%" data-model-id="{{ media.id }}">
+        {{ media | model_viewer_tag: image_size: '500x500', reveal: 'interaction', toggleable: true, data-model-id: media.id }}
+      </div>
+    {% else %}
+      <div class="product-media product-media--frame" style="padding-bottom: {{ 1 | divided_by: media.aspect_ratio | times: 100 }}%;">
+        {{ media | media_tag: class: 'media-item', image_size: '500x500' }}
+      </div>
+  {% endcase %}
+</div>

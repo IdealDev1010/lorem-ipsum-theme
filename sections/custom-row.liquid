@@ -1,0 +1,614 @@
+<div id="section-id-{{ section.id }}" class="container fully-spaced-row--medium cf section-id-{{ section.id }}" data-section-type="custom-row">
+  <div class="flexible-layout flexible-layout--align-center valign-{{ section.settings.alignment }}">
+    {% for block in section.blocks %}
+      <div id="block-id-{{ block.id }}" class="column column--{{ block.settings.width }} block-id-{{ block.id }}" {{ block.shopify_attributes }} data-cc-animate="cc-fade-in-up" data-cc-animate-delay="{{ forloop.index | times: 0.15 }}s">
+
+        {% if block.type == 'image' %}
+          <style>
+            {%- if block.settings.height == 'fixed' -%}
+            #block-id-{{ block.id }} .fixed-height-item {
+              height: {{ block.settings.height_mobile }}px;
+            }
+            {%- endif -%}
+            @media (min-width: 768px) {
+              {%- if block.settings.height == 'fixed' -%}
+              #block-id-{{ block.id }} .fixed-height-item {
+                height: {{ block.settings.height_desktop }}px;
+              }
+              {%- endif -%}
+            }
+          </style>
+
+          {%- assign show_overlay_text = false -%}
+          {%- if block.settings.title != blank or block.settings.subheading != blank or block.settings.text != blank or block.settings.button_label != blank -%}
+            {%- assign show_overlay_text = true -%}
+          {%- endif -%}
+          <div class="height--{{ block.settings.height }} image-overlay image-overlay--bg-{{ block.settings.overlay_style }} {% if block.settings.mobile_overlay_under %}overlay-text-parent--mobile-stack{% endif %}">
+            {%- unless block.settings.image_link == blank or block.settings.text contains '</a>' -%}<a class="image-overlay__image-link" href="{{ block.settings.image_link }}">{%- endunless -%}
+
+            {%- if block.settings.image == blank -%}
+              <div class="placeholder-image placeholder--banner{% if show_overlay_text %} dark{% endif %}{% if block.settings.height == 'fixed' %} fixed-height-item{% endif %}">
+                {{- 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' -}}
+              </div>
+            {%- else -%}
+              <div class="rimage-background-wrapper lazyload--placeholder">
+                <div class="rimage-outer-wrapper rimage-background lazyload fade-in{% if block.settings.height == 'fixed' %} fixed-height-item{% endif %}"
+                    data-bgset="{% render 'bgset', image: block.settings.image %}"
+                    data-sizes="auto"
+                    data-parent-fit="cover"
+                    style="background-position: {{ block.settings.image_position }}">
+                  {%- if block.settings.height == 'adapt' -%}
+                    <div class="rimage-wrapper" style="padding-top:{{ 1 | divided_by: block.settings.image.aspect_ratio | times: 100 }}%"></div>
+                  {%- endif -%}
+                  <noscript>
+                    <div class="rimage-wrapper" style="padding-top:{{ 1 | divided_by: block.settings.image.aspect_ratio | times: 100 }}%">
+                      <img src="{{ block.settings.image | img_url: '1024x1024' }}" alt="{{ block.settings.image.alt | escape }}" class="rimage__image">
+                    </div>
+                  </noscript>
+                </div>
+              </div>
+            {%- endif -%}
+
+            {%- if show_overlay_text -%}
+            <div class="overlay-text overlay--v-{{ block.settings.text_alignment | split: ' ' | first }} overlay--h-{{ block.settings.text_alignment | split: ' ' | last }} image-overlay__over">
+              <div class="overlay-text__inner">
+                <div class="overlay-text__text">
+                  {%- if block.settings.subheading != blank -%}
+                    <div class="overlay-text__subheading subheading subheading--over">{{ block.settings.subheading | escape }}</div>
+                  {%- endif -%}
+                  {%- if block.settings.title != blank -%}
+                    <h2 class="overlay-text__title h4-style">{% render 'multiline-text' with block.settings.title %}</h2>
+                  {%- endif -%}
+                  {%- if block.settings.text != blank -%}
+                    <div class="overlay-text__rte rte {% if block.settings.enlarge_text %}large-text{% endif %}">{{ block.settings.text }}</div>
+                  {%- endif -%}
+                  {%- if block.settings.button_label != blank -%}
+                    <div class="overlay-text__button-row overlay-text__button-row--secondary">
+                      {%- if block.settings.text contains '</a>' -%}
+                      <a class="overlay-text__button btn btn--secondary" href="{{ block.settings.image_link }}">{{ block.settings.button_label | escape }}</a>
+                      {%- else -%}
+                      <span class="overlay-text__button btn btn--secondary">{{ block.settings.button_label | escape }}</span>
+                      {%- endif -%}
+                    </div>
+                  {%- endif -%}
+                </div>
+              </div>
+            </div>
+            {%- endif -%}
+
+            {%- unless block.settings.image_link == blank or block.settings.text contains '</a>' -%}</a>{%- endunless -%}
+          </div>
+
+        {% elsif block.type == 'text' %}
+
+          <div class="align-{{ block.settings.text_alignment }}">
+            {%- if block.settings.subheading != blank -%}
+              <div class="subheading subheading--over">{{ block.settings.subheading | escape }}</div>
+            {%- endif -%}
+
+            {%- if block.settings.title != blank -%}
+              <h2 class="majortitle h1-style in-content">{{ block.settings.title | escape }}</h2>
+            {%- endif -%}
+
+            <div class="rte {% if block.settings.enlarge_text %}large-text{% endif %}">{{ block.settings.text }}</div>
+
+            {%- if block.settings.button_label != blank -%}
+              <div class="lightly-spaced-row-above">
+                <a class="{% if block.settings.button_style != 'link' %}btn btn--{{ block.settings.button_style }}{% else %}small-feature-link{% endif %}" href="{{ block.settings.button_link }}">{{ block.settings.button_label | escape }}</a>
+              </div>
+            {%- endif -%}
+          </div>
+
+        {% elsif block.type == 'video' %}
+
+          <div class="video-container"
+            data-video-id="{{ block.settings.video_url.id }}"
+            data-video-url="{{ block.settings.video_url }}"
+            data-video-type="{{ block.settings.video_url.type }}"
+            data-video-autoplay="false"
+            data-video-loop="false">
+            <div class="video-container__video"></div>
+          </div>
+
+        {% elsif block.type == 'html' %}
+
+          <div class="custom-html">
+            {{ block.settings.code }}
+          </div>
+
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+
+{% schema %}
+  {
+    "name": "Custom content",
+    "max_blocks": 5,
+    "settings": [
+      {
+        "type": "select",
+        "id": "alignment",
+        "label": "Vertical alignment",
+        "default": "top",
+        "options": [
+          {
+            "value": "top",
+            "label": "Top"
+          },
+          {
+            "value": "middle",
+            "label": "Middle"
+          },
+          {
+            "value": "bottom",
+            "label": "Bottom"
+          }
+        ]
+      }
+    ],
+    "blocks": [
+      {
+        "type": "image",
+        "name": "Image",
+        "settings": [
+          {
+            "type": "select",
+            "id": "width",
+            "label": "Width",
+            "default": "half",
+            "options": [
+              {
+                "value": "quarter",
+                "label": "25%"
+              },
+              {
+                "value": "third",
+                "label": "33%"
+              },
+              {
+                "value": "half",
+                "label": "50%"
+              },
+              {
+                "value": "two-thirds",
+                "label": "66%"
+              },
+              {
+                "value": "three-quarters",
+                "label": "75%"
+              },
+              {
+                "value": "full",
+                "label": "100%"
+              }
+            ]
+          },
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image",
+            "info": "2048 x 1024px recommended"
+          },
+          {
+            "type": "select",
+            "id": "image_position",
+            "label": "Image alignment",
+            "info": "Used to keep the subject of your image in view",
+            "default": "center center",
+            "options": [
+              {
+                "value": "top left",
+                "label": "Top left"
+              },
+              {
+                "value": "top center",
+                "label": "Top center"
+              },
+              {
+                "value": "top right",
+                "label": "Top right"
+              },
+              {
+                "value": "center left",
+                "label": "Middle left"
+              },
+              {
+                "value": "center center",
+                "label": "Middle center"
+              },
+              {
+                "value": "center right",
+                "label": "Middle right"
+              },
+              {
+                "value": "bottom left",
+                "label": "Bottom left"
+              },
+              {
+                "value": "bottom center",
+                "label": "Bottom center"
+              },
+              {
+                "value": "bottom right",
+                "label": "Bottom right"
+              }
+            ]
+          },
+          {
+            "type": "radio",
+            "id": "height",
+            "label": "Image height",
+            "options": [
+              {
+                "value": "adapt",
+                "label": "Natural"
+              },
+              {
+                "value": "fixed",
+                "label": "Fixed height"
+              }
+            ],
+            "default": "adapt"
+          },
+          {
+            "type": "range",
+            "id": "height_desktop",
+            "min": 200,
+            "max": 1000,
+            "step": 20,
+            "unit": "px",
+            "label": "Desktop fixed height",
+            "default": 600
+          },
+          {
+            "type": "range",
+            "id": "height_mobile",
+            "min": 100,
+            "max": 1000,
+            "step": 20,
+            "unit": "px",
+            "label": "Mobile fixed height",
+            "default": 500
+          },
+          {
+            "type": "text",
+            "id": "subheading",
+            "label": "Subheading",
+            "default": "Subheading"
+          },
+          {
+            "type": "textarea",
+            "id": "title",
+            "label": "Heading",
+            "default": "Tell your story"
+          },
+          {
+            "type": "richtext",
+            "id": "text",
+            "label": "Text",
+            "default": "<p>Pair text with an image to tell a story</p>"
+          },
+          {
+            "type": "checkbox",
+            "id": "enlarge_text",
+            "label": "Enlarge text",
+            "default": false
+          },
+          {
+            "type": "text",
+            "id": "button_label",
+            "label": "Button"
+          },
+          {
+            "type": "url",
+            "id": "image_link",
+            "label": "Image link"
+          },
+          {
+            "type": "select",
+            "id": "text_alignment",
+            "label": "Text overlay position",
+            "options": [
+              {
+                "value": "top left",
+                "label": "Top left"
+              },
+              {
+                "value": "top center",
+                "label": "Top center"
+              },
+              {
+                "value": "top right",
+                "label": "Top right"
+              },
+              {
+                "value": "center left",
+                "label": "Middle left"
+              },
+              {
+                "value": "center center",
+                "label": "Middle center"
+              },
+              {
+                "value": "center right",
+                "label": "Middle right"
+              },
+              {
+                "value": "bottom left",
+                "label": "Bottom left"
+              },
+              {
+                "value": "bottom center",
+                "label": "Bottom center"
+              },
+              {
+                "value": "bottom right",
+                "label": "Bottom right"
+              }
+            ],
+            "default": "center center"
+          },
+          {
+            "type": "header",
+            "content": "Layout"
+          },
+          {
+            "id": "mobile_overlay_under",
+            "type": "checkbox",
+            "label": "Show text below image on mobile",
+            "default": false
+          },
+          {
+            "id": "overlay_style",
+            "type": "select",
+            "label": "Overlay style",
+            "default": "shadow",
+            "options": [
+              {
+                "value": "full",
+                "label": "Tint"
+              },
+              {
+                "value": "box",
+                "label": "Box"
+              },
+              {
+                "value": "shadow",
+                "label": "Text shadow"
+              },
+              {
+                "value": "full image-overlay--bg-shadow",
+                "label": "Text shadow and tint"
+              },
+              {
+                "value": "no_background",
+                "label": "No background"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "name": "Text",
+        "settings": [
+          {
+            "type": "select",
+            "id": "width",
+            "label": "Width",
+            "default": "half",
+            "options": [
+              {
+                "value": "quarter",
+                "label": "25%"
+              },
+              {
+                "value": "third",
+                "label": "33%"
+              },
+              {
+                "value": "half",
+                "label": "50%"
+              },
+              {
+                "value": "two-thirds",
+                "label": "66%"
+              },
+              {
+                "value": "three-quarters",
+                "label": "75%"
+              },
+              {
+                "value": "full",
+                "label": "100%"
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "id": "subheading",
+            "label": "Subheading"
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Heading",
+            "default": "Rich text"
+          },
+          {
+            "type": "richtext",
+            "id": "text",
+            "label": "Text",
+            "default": "<p>Use this text to share information about your store with your customers.</p><p>Describe products, share announcements, or welcome customers to your store.</p>"
+          },
+          {
+            "type": "text",
+            "id": "button_label",
+            "label": "Button"
+          },
+          {
+            "type": "url",
+            "id": "button_link",
+            "label": "Button link"
+          },
+          {
+            "type": "select",
+            "id": "button_style",
+            "label": "Button style",
+            "default": "primary",
+            "options": [
+              {
+                "label": "Button - primary",
+                "value": "primary"
+              },
+              {
+                "label": "Button - secondary",
+                "value": "secondary"
+              },
+              {
+                "label": "Link",
+                "value": "link"
+              }
+            ]
+          },
+          {
+            "type": "select",
+            "id": "text_alignment",
+            "label": "Text alignment",
+            "default": "center",
+            "options": [
+              {
+                "value": "left",
+                "label": "Left"
+              },
+              {
+                "value": "center",
+                "label": "Center"
+              },
+              {
+                "value": "right",
+                "label": "Right"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "video",
+        "name": "Embedded video",
+        "settings": [
+          {
+            "type": "select",
+            "id": "width",
+            "label": "Width",
+            "default": "half",
+            "options": [
+              {
+                "value": "quarter",
+                "label": "25%"
+              },
+              {
+                "value": "third",
+                "label": "33%"
+              },
+              {
+                "value": "half",
+                "label": "50%"
+              },
+              {
+                "value": "two-thirds",
+                "label": "66%"
+              },
+              {
+                "value": "three-quarters",
+                "label": "75%"
+              },
+              {
+                "value": "full",
+                "label": "100%"
+              }
+            ]
+          },
+          {
+            "id": "video_url",
+            "type": "video_url",
+            "label": "Video URL",
+            "accept": ["youtube", "vimeo"],
+            "info": "Supports Youtube and Vimeo",
+            "default": "https:\/\/www.youtube.com\/watch?v=_9VUPq3SxOc"
+          }
+        ]
+      },
+      {
+        "type": "html",
+        "name": "Custom Liquid",
+        "settings": [
+          {
+            "type": "select",
+            "id": "width",
+            "label": "Width",
+            "default": "half",
+            "options": [
+              {
+                "value": "quarter",
+                "label": "25%"
+              },
+              {
+                "value": "third",
+                "label": "33%"
+              },
+              {
+                "value": "half",
+                "label": "50%"
+              },
+              {
+                "value": "two-thirds",
+                "label": "66%"
+              },
+              {
+                "value": "three-quarters",
+                "label": "75%"
+              },
+              {
+                "value": "full",
+                "label": "100%"
+              }
+            ]
+          },
+          {
+            "type": "liquid",
+            "id": "code",
+            "label": "Custom Liquid"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Custom content",
+        "settings": {
+            "alignment": "middle"
+        },
+        "blocks": [
+          {
+            "type": "image",
+            "settings": {
+              "width": "half"
+            }
+          },
+          {
+            "type": "text",
+            "settings": {
+              "title": "Welcome",
+              "text": "<p>Use this text to share information about your store with your customers.</p><p>Describe products, share announcements, or welcome customers to your store.</p>",
+              "width": "half"
+            }
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

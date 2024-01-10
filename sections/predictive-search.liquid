@@ -1,0 +1,77 @@
+{%- if predictive_search.performed -%}
+  <div id="predictive-search-results" class="product-list product-list--per-row-4 product-list--per-row-mob-{{ settings.prod_thumb_mob_per_row }} product-list--image-shape-{{ settings.prod_thumb_shape }}">
+    {%- liquid
+      if settings.prod_thumb_shape == 'portrait-23'
+        assign chosen_product_aspect_ratio = 0.67
+      elsif settings.prod_thumb_shape == 'portrait-45'
+        assign chosen_product_aspect_ratio = 0.8
+      elsif settings.prod_thumb_shape == 'square'
+        assign chosen_product_aspect_ratio = 1.0
+      elsif settings.prod_thumb_shape == 'landscape-54'
+        assign chosen_product_aspect_ratio = 1.25
+      elsif settings.prod_thumb_shape == 'landscape-32'
+        assign chosen_product_aspect_ratio = 1.50
+      elsif settings.prod_thumb_shape == 'tallest'
+        assign chosen_product_aspect_ratio = 99
+        for product in predictive_search.resources.products
+          if product.featured_media.preview_image.aspect_ratio < chosen_product_aspect_ratio
+            assign chosen_product_aspect_ratio = product.featured_media.preview_image.aspect_ratio
+          endif
+        endfor
+      else
+        assign chosen_product_aspect_ratio = 0
+        for product in predictive_search.resources.products
+          if product.featured_media.preview_image.aspect_ratio > chosen_product_aspect_ratio
+            assign chosen_product_aspect_ratio = product.featured_media.preview_image.aspect_ratio
+          endif
+        endfor
+      endif
+
+      if settings.coll_grid_image_shape == 'portrait-23'
+        assign chosen_collection_aspect_ratio = 0.67
+      elsif settings.coll_grid_image_shape == 'portrait-45'
+        assign chosen_collection_aspect_ratio = 0.8
+      elsif settings.coll_grid_image_shape == 'square'
+        assign chosen_collection_aspect_ratio = 1.0
+      elsif settings.coll_grid_image_shape == 'landscape-54'
+        assign chosen_collection_aspect_ratio = 1.25
+      elsif settings.coll_grid_image_shape == 'landscape-32'
+        assign chosen_collection_aspect_ratio = 1.50
+      elsif settings.coll_grid_image_shape == 'tallest'
+        assign chosen_collection_aspect_ratio = 99
+        for collection in predictive_search.resources.collections
+          if collection.featured_image.aspect_ratio < chosen_collection_aspect_ratio
+            assign chosen_collection_aspect_ratio = collection.featured_image.aspect_ratio
+          endif
+        endfor
+      else
+        assign chosen_collection_aspect_ratio = 0
+        for collection in predictive_search.resources.collections
+          if collection.featured_image.aspect_ratio > chosen_collection_aspect_ratio
+            assign chosen_collection_aspect_ratio = collection.featured_image.aspect_ratio
+          endif
+        endfor
+      endif
+    -%}
+
+    {%- for product in predictive_search.resources.products -%}
+      {% render 'product-block', product: product, custom_aspect_ratio: chosen_product_aspect_ratio, animate: true %}
+    {%- endfor -%}
+
+    {%- for collection in predictive_search.resources.collections -%}
+      {% render 'collection-block', collection: collection, custom_aspect_ratio: chosen_collection_aspect_ratio, animate: true %}
+    {%- endfor -%}
+
+    {%- for page in predictive_search.resources.pages -%}
+      <div class="product-block page-block">
+        <div class="page-block__title"><a href="{{ page.url }}">{{ page.title }}</a></div>
+      </div>
+    {%- endfor -%}
+
+    {%- for article in predictive_search.resources.articles -%}
+      <div class="product-block page-block">
+        <div class="page-block__title"><a href="{{ article.url }}">{{ article.title }}</a></div>
+      </div>
+    {%- endfor -%}
+  </div>
+{%- endif -%}

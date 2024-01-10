@@ -1,0 +1,91 @@
+{%- capture all_variants_label_html -%}
+  {%- if product.metafields.theme.label != blank -%}
+    <span class="product-label product-label--meta">
+      <span>{{ product.metafields.theme.label | escape }}</span>
+    </span>
+  {%- endif -%}
+
+  {%- liquid
+    if settings.prod_new_show
+      if settings.prod_new_method == 'date'
+        assign now_s = 'now' | date: '%s' | plus: 0
+        assign pub_s = product.created_at | date: '%s' | plus: 0
+        assign diff_days = now_s | minus: pub_s | divided_by: 86400
+
+        if diff_days < settings.prod_new_limit_int
+          assign new_label_text = 'products.labels.new_in' | t
+        endif
+      elsif settings.prod_new_method == 'tag'
+        if product.tags contains 'New'
+          assign new_label_text = 'products.labels.new_in' | t
+        endif
+      else
+        for collection in product.collections
+          assign split_collection_handle = collection.handle | split: '-'
+          if split_collection_handle contains 'new'
+            assign new_label_text = 'products.labels.new_in' | t
+            break
+          endif
+        endfor
+      endif
+    endif
+  -%}
+  {%- if new_label_text -%}
+    <span class="product-label product-label--new-in">
+      <span>{{ new_label_text }}</span>
+    </span>
+  {%- endif -%}
+{%- endcapture -%}
+
+<span class="product-label-list">
+  {%- for variant in product.variants -%}
+    <script id="variant-label-{{ product.id }}-{{ variant.id }}" type="text/template">
+      {%- capture label_html -%}
+        {{- all_variants_label_html -}}
+
+        {%- liquid
+          assign sale_label_text = false
+          if settings.prod_reduction_show and variant.compare_at_price > variant.price
+            if settings.prod_reduction_type == 'percent'
+              assign amount = 1.0 | times: variant.price | divided_by: variant.compare_at_price
+              assign amount = 1.0 | minus: amount
+              assign amount = amount | times: 100.0 | round
+              assign sale_label_text = 'products.labels.percent_reduction' | t: amount: amount
+            else
+              assign amount = variant.compare_at_price | minus: variant.price | money
+              assign sale_label_text = 'products.labels.value_reduction_html' | t: amount: amount
+            endif
+          endif
+        -%}
+        {%- if sale_label_text -%}
+          <span class="product-label product-label--sale">
+            <span>{{ sale_label_text }}</span>
+          </span>
+        {%- endif -%}
+      {%- endcapture -%}
+
+      {%- if label_html != blank -%}
+        <div class="product-label-container">
+          {{- label_html -}}
+        </div>
+      {%- endif -%}
+    </script>
+
+    {%- if current_variant == false -%}
+      {%- if all_variants_label_html != blank -%}
+        <script id="variant-label-{{ product.id }}-none" type="text/template">
+          <div class="product-label-container">
+            {{- all_variants_label_html -}}
+          </div>
+        </script>
+        <div class="product-label-container">
+          {{- all_variants_label_html -}}
+        </div>
+      {%- endif -%}
+    {%- elsif variant.id == current_variant.id and label_html -%}
+      <div class="product-label-container">
+        {{- label_html -}}
+      </div>
+    {%- endif -%}
+  {%- endfor -%}
+</span>

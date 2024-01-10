@@ -1,0 +1,188 @@
+<ul class="navigation__tier-1">
+  {% for link in linklists[link_list].links %}
+    {%- liquid
+      assign has_dropdown = false
+      assign use_columns = false
+      assign small_promo_count = 0
+      assign link_title_sanitised = link.title | downcase | strip
+
+      if link.links != blank
+        assign has_dropdown = true
+      endif
+
+      if link.levels >= 2
+        assign use_columns = true
+      else
+        for block in section.blocks
+          assign dropdown_link_title_sanitised = block.settings.dropdown_link_title | downcase | strip
+          if dropdown_link_title_sanitised == link_title_sanitised
+            assign use_columns = true
+            assign has_dropdown = true
+          endif
+        endfor
+      endif
+
+      for block in section.blocks
+        assign dropdown_link_title_sanitised = block.settings.dropdown_link_title | downcase | strip
+        if dropdown_link_title_sanitised == link_title_sanitised and block.type == 'menu-promotion-small'
+          assign small_promo_count = small_promo_count | plus: 1
+        endif
+      endfor
+
+      if use_columns and link.levels == 1
+        assign column_count = 1 | plus: small_promo_count
+      else
+        assign column_count = link.links.size | plus: small_promo_count
+      endif
+    -%}
+    <li class="navigation__item{% if has_dropdown %} navigation__item--with-children {% if use_columns %}navigation__item--with-mega-menu{% else %}navigation__item--with-small-menu{% endif %}{% endif %}{% if featured_links contains link.title %} featured-link{% endif %}{% if link.active %} navigation__item--active{% endif %}">
+      <a href="{{ link.url }}" class="navigation__link" {% if has_dropdown %}aria-haspopup="true" aria-expanded="false" aria-controls="NavigationTier2-{{ forloop.index }}{% if mobile %}-mob{% endif %}"{% endif %}>
+        {{- link.title | escape -}}
+      </a>
+
+      {% if has_dropdown %}
+        <a class="navigation__children-toggle" href="#">{% render 'icon-toggle-menu', stroke_width: 1.3 %}</a>
+
+        <div id="NavigationTier2-{{ forloop.index }}{% if mobile %}-mob{% endif %}" class="navigation__tier-2-container navigation__child-tier">
+          {%- for block in section.blocks -%}
+            {%- assign dropdown_link_title_sanitised = block.settings.dropdown_link_title | downcase | strip -%}
+            {%- if dropdown_link_title_sanitised == link_title_sanitised and block.type == 'menu-promotion-large' -%}
+              <div class="navigation__wide-promotion{% if block.settings.enable_fade %} navigation__wide-promotion--with-fade{% endif %}">
+                <div class="container">
+                  <div class="flexible-layout valign-middle">
+                    {%- if block.settings.desktop_image != blank and mobile == false -%}
+                      <div class="column column--half {% if block.settings.image_position == 'right' %}column--order-push-desktop{% endif %}">
+                        <div class="container__breakout">
+                          {%- render 'responsive-image', image: block.settings.desktop_image, cover: true -%}
+                        </div>
+                      </div>
+                    {%- endif -%}
+                    {%- if block.settings.mobile_image != blank and mobile == true -%}
+                      <div class="column column--full">
+                        <div class="container__breakout">
+                          {%- render 'responsive-image', image: block.settings.mobile_image, cover: true -%}
+                        </div>
+                      </div>
+                    {%- endif -%}
+
+                    <div class="column column--{% if block.settings.desktop_image == blank %}full{% else %}half{% endif %} align-{{ block.settings.text_alignment }}">
+                      <div class="feature-text-paired">
+                        {%- if block.settings.subheading != blank -%}
+                          <div class="subheading subheading--over">{{ block.settings.subheading | escape }}</div>
+                        {%- endif -%}
+
+                        {% if block.settings.title != blank %}
+                          <h2 class="majortitle in-content h1-style">{{ block.settings.title | escape }}</h2>
+                        {% endif %}
+
+                        <div class="rte">{{ block.settings.text }}</div>
+
+                        {% if block.settings.button_1_label != blank or block.settings.button_2_label != blank %}
+                          <div class="button-row">
+                            {% if block.settings.button_1_label != blank %}
+                              <a class="button-row__button {% if block.settings.button_1_style != 'link' %}btn btn--{{ block.settings.button_1_style }}{% else %}small-feature-link{% endif %}" href="{{ block.settings.button_1_link }}">{{ block.settings.button_1_label | escape }}</a>
+                            {% endif %}
+                            {% if block.settings.button_2_label != blank %}
+                              <a class="button-row__button {% if block.settings.button_2_style != 'link' %}btn btn--{{ block.settings.button_2_style }}{% else %}small-feature-link{% endif %}" href="{{ block.settings.button_2_link }}">{{ block.settings.button_2_label | escape }}</a>
+                            {% endif %}
+                          </div>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+
+          {%- if link.links != blank or small_promo_count > 0 -%}
+            <div class="container">
+              <ul class="navigation__tier-2{% if use_columns %} navigation__columns navigation__columns--count-{{ column_count }}{% if column_count == 5 %} navigation__columns--5-cols{% elsif column_count > 5 %} navigation__columns--over-5-cols{% endif %}{% if small_promo_count > 0 %} navigation__columns--with-promos{% endif %}{% endif %}">
+                {% if use_columns and link.levels == 1 %}
+                  <li class="navigation__item navigation__column">
+                    {% for child_link in link.links %}
+                      <a href="{{ child_link.url }}" class="navigation__link">
+                        {{- child_link.title | escape -}}
+                      </a>
+                    {% endfor %}
+                  </li>
+                {% else %}
+                  {% for child_link in link.links %}
+                    <li class="navigation__item{% if child_link.links != blank %} navigation__item--with-children{% endif %}{% if use_columns %} navigation__column{% endif %}{% if featured_links contains child_link.title %} featured-link{% endif %}">
+                      <a href="{{ child_link.url }}" class="navigation__link{% if child_link.links != blank %} navigation__column-title{% endif %}" {% if child_link.links != blank %}aria-haspopup="true" aria-expanded="false"{% endif %}>
+                        {{- child_link.title | escape -}}
+                      </a>
+                      {% if child_link.links != blank %}
+                        <a class="navigation__children-toggle" href="#">{% render 'icon-toggle-menu', stroke_width: 1.3 %}</a>
+                      {% endif %}
+
+                      {% if child_link.links != blank %}
+                        <div class="navigation__tier-3-container navigation__child-tier">
+                          <ul class="navigation__tier-3">
+                            {% for child_child_link in child_link.links %}
+                            <li class="navigation__item{% if featured_links contains child_child_link.title %} featured-link{% endif %}">
+                              <a class="navigation__link" href="{{ child_child_link.url }}">{{ child_child_link.title | escape }}</a>
+                            </li>
+                            {% endfor %}
+                          </ul>
+                        </div>
+                      {% endif %}
+                    </li>
+                  {% endfor %}
+                {% endif %}
+
+                {%- if small_promo_count > 0 -%}
+                  {%- if mobile == false -%}
+                    {%- for block in section.blocks -%}
+                      {%- assign dropdown_link_title_sanitised = block.settings.dropdown_link_title | downcase | strip -%}
+                      {%- if dropdown_link_title_sanitised == link_title_sanitised and block.type == 'menu-promotion-small' -%}
+                        <li class="desktop-only navigation__column navigation__column--promotion">
+                          <div class="menu-promotion">
+                            {%- if block.settings.link_url != blank -%}
+                              <a class="menu-promotion__link" href="{{ block.settings.link_url }}">
+                            {%- endif -%}
+                            <div class="menu-promotion__image">
+                              {%- render 'responsive-image', image: block.settings.image, manual_image_load: true -%}
+                            </div>
+                            {%- if block.settings.title != blank -%}
+                              <div class="menu-promotion__text">{{ block.settings.title | escape }}</div>
+                            {%- endif -%}
+                            {%- if block.settings.link_url != blank -%}
+                              </a>
+                            {%- endif -%}
+                          </div>
+                        </li>
+                      {%- endif -%}
+                    {%- endfor -%}
+                  {%- else -%}
+                    <li class="navigation__column navigation__column--promotion{% if section.settings.enable_mobile_promo_carousel and link.links.size > 0 %} navigation__column--promotion-carousel{% endif %}">
+                      {%- for block in section.blocks -%}
+                        {%- assign dropdown_link_title_sanitised = block.settings.dropdown_link_title | downcase | strip -%}
+                        {%- if dropdown_link_title_sanitised == link_title_sanitised and block.type == 'menu-promotion-small' -%}
+                          <div class="menu-promotion">
+                            {%- if block.settings.link_url != blank -%}
+                              <a class="menu-promotion__link" href="{{ block.settings.link_url }}">
+                            {%- endif -%}
+                            <div class="menu-promotion__image">
+                              {%- render 'responsive-image', image: block.settings.image, manual_image_load: true -%}
+                            </div>
+                            {%- if block.settings.title != blank -%}
+                              <div class="menu-promotion__text">{{ block.settings.title | escape }}</div>
+                            {%- endif -%}
+                            {%- if block.settings.link_url != blank -%}
+                              </a>
+                            {%- endif -%}
+                          </div>
+                        {%- endif -%}
+                      {%- endfor -%}
+                    </li>
+                  {%- endif -%}
+                {%- endif -%}
+              </ul>
+            </div>
+          {%- endif -%}
+        </div>
+      {% endif %}
+    </li>
+  {% endfor %}
+</ul>

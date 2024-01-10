@@ -1,0 +1,151 @@
+
+{% if section.blocks.size > 0 or section.settings.show_language_selector or section.settings.show_country_selector or section.settings.menu != blank %}
+  {%- liquid
+    assign longest_announcement = 0
+    for block in section.blocks
+      assign text = block.settings.text | strip_html
+      if text.size > longest_announcement
+        assign longest_announcement = text.size
+      endif
+    endfor
+  -%}
+  <div id="section-id-{{ section.id }}" class="announcement-bar
+      {%- if section.blocks.size > 0 %} announcement-bar--with-announcement{% endif -%}
+      {%- if longest_announcement > 45 and section.settings.menu != blank %} announcement-bar--tablet-wrap{% endif -%}
+      " data-section-type="announcement-bar" data-cc-animate>
+    {% style %}
+      #section-id-{{ section.id }} {
+        --announcement-background: {{ section.settings.announcement_bar_col }};
+        --announcement-text: {{ section.settings.announcement_text_col }};
+        --link-underline: {{ section.settings.announcement_text_col | color_modify: "alpha", 0.6 }};
+        --announcement-font-size: {{ section.settings.message_font_size }}px;
+      }
+    {% endstyle %}
+
+    <div class="container container--no-max">
+      <div class="announcement-bar__left desktop-only">
+        {% if section.settings.show_social_icons %}
+          {% render 'social-icons', icon_setting: settings.social_custom_icon, icon_size: 'x30' %}
+        {% endif %}
+      </div>
+
+      <div class="announcement-bar__middle">
+        {%- if section.blocks.size > 0 -%}
+          <div class="announcement-bar__announcements">
+            {%- for block in section.blocks -%}
+              <div class="announcement{% unless forloop.first %} announcement--inactive{% endunless %}" {{ block.shopify_attributes }}>
+                <div class="announcement__text">{{ block.settings.text }}</div>
+              </div>
+            {%- endfor -%}
+          </div>
+          <div class="announcement-bar__announcement-controller">
+            <button class="announcement-button announcement-button--previous notabutton" aria-label="{{ 'general.accessibility_labels.previous' | t | escape }}">{% render 'svg-chevron-left' %}</button><button class="announcement-button announcement-button--next notabutton" aria-label="{{ 'general.accessibility_labels.next' | t | escape }}">{% render 'svg-chevron-right' %}</button>
+          </div>
+        {%- endif -%}
+      </div>
+
+      <div class="announcement-bar__right desktop-only">
+        {% if section.settings.menu != blank %}
+          <span class="inline-menu">
+            {% for link in linklists[section.settings.menu].links %}
+              <a class="inline-menu__link announcement-bar__link" href="{{ link.url }}">{{ link.title }}</a>
+            {% endfor %}
+          </span>
+        {% endif %}
+        {% if section.settings.show_language_selector or section.settings.show_country_selector %}
+          <div class="header-disclosures">
+            {% render 'localization', input_prefix: 'annbar' %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{%- endif -%}
+
+
+{% schema %}
+  {
+    "name": "Announcement bar",
+    "class": "section-announcement-bar",
+    "settings": [
+      {
+        "type": "color",
+        "id": "announcement_bar_col",
+        "label": "Bar",
+        "default": "#4a4a4a"
+      },
+      {
+        "type": "color",
+        "id": "announcement_text_col",
+        "label": "Text",
+        "default": "#ffffff"
+      },
+      {
+        "type": "range",
+        "id": "message_font_size",
+        "min": 11,
+        "max": 18,
+        "step": 1,
+        "unit": "px",
+        "label": "Announcement font size",
+        "default": 14
+      },
+      {
+        "type": "header",
+        "content": "Links"
+      },
+      {
+        "type": "paragraph",
+        "content": "Links, social media icons, and localization options will show in the menu on mobile"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_social_icons",
+        "label": "Show social media links",
+        "default": true
+      },
+      {
+        "type": "link_list",
+        "id": "menu",
+        "label": "Menu",
+        "info": "This menu won't show dropdown items"
+      },
+      {
+        "type": "header",
+        "content": "Country/Region Selector",
+        "info": "To add a country/region, go to your [payment settings.](/admin/settings/payments)"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_country_selector",
+        "label": "Enable country/region selector",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Language Selector",
+        "info": "To add a language, go to your [language settings.](/admin/settings/languages)"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_language_selector",
+        "label": "Enable language selector",
+        "default": true
+      }
+    ],
+    "blocks": [
+      {
+        "type": "announcement",
+        "name": "Announcement",
+        "settings": [
+          {
+            "type": "richtext",
+            "id": "text",
+            "label": "Text",
+            "default": "<p>Announce <a href=\"#\">something</a> here</p>"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

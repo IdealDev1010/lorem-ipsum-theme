@@ -1,0 +1,84 @@
+{
+  "sections": {
+    "ff414ce2-d6ab-4390-bedb-c0c8a80474db": {
+      "type": "apps",
+      "settings": {
+        "full_width": false
+      }
+    },
+    "main": {
+      "type": "main-collection",
+      "disabled": true,
+      "settings": {
+        "show_image_behind_heading": true,
+        "heading_image_height": "medium",
+        "overlay_style": "shadow",
+        "coll_num_per_page_int": 24,
+        "grid": 4,
+        "show_vendor": false,
+        "show_total": true,
+        "coll_desc_pos": "above",
+        "enable_filtering": true,
+        "collapse_tag_sidebar_by_default": false,
+        "collapse_filters_method": "over-12",
+        "show_filter_counts": false,
+        "show_disabled_filters": true,
+        "ajax_products": true,
+        "auto_apply_hide_unavailable": false,
+        "enable_sticky_filter": true,
+        "filter_two_columns": false,
+        "coll_show_sort": true,
+        "coll_show_feat": false,
+        "enable_subcoll": true,
+        "subcoll_menu": "main-menu",
+        "subcoll_style": "buttons",
+        "subcoll_gall_shape": "sq",
+        "image_position": "center center",
+        "subcoll_gall_enable_margin": true,
+        "subcoll_gall_full_width": false,
+        "subcoll_gall_overlay_style": "shadow",
+        "subcoll_gall_text_alignment": "center center",
+        "subcoll_gall_mobile_layout": "2"
+      }
+    },
+    "b0d102be-86c7-4323-a08a-526b3f138c4b": {
+      "type": "rich-text",
+      "blocks": {
+        "template--16296339013787__b0d102be-86c7-4323-a08a-526b3f138c4b-heading-1": {
+          "type": "heading",
+          "settings": {
+            "title": "tops & Jackets",
+            "use_h1": false
+          }
+        },
+        "template--16296339013787__b0d102be-86c7-4323-a08a-526b3f138c4b-text-1": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Sed posuere consectetur est at lobortis. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Maecenas faucibus mollis interdum. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Nullam id dolor id nibh ultricies vehicula ut id elit.<\/p>",
+            "enlarge_text": false
+          }
+        }
+      },
+      "block_order": [
+        "template--16296339013787__b0d102be-86c7-4323-a08a-526b3f138c4b-heading-1",
+        "template--16296339013787__b0d102be-86c7-4323-a08a-526b3f138c4b-text-1"
+      ],
+      "settings": {
+        "height": "medium",
+        "text_alignment": "center",
+        "full_width": false,
+        "use_alt_bg": false,
+        "padding_top": 60,
+        "padding_bottom": 60,
+        "text_color": "#004289",
+        "back_color": "#f5f6f4"
+      }
+    }
+  },
+  "order": [
+    "ff414ce2-d6ab-4390-bedb-c0c8a80474db",
+    "main",
+    "b0d102be-86c7-4323-a08a-526b3f138c4b"
+  ],
+  "wrapper": ".boost-sd__product-filter-fallback"
+}

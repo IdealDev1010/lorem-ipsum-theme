@@ -1,0 +1,29 @@
+<div class="product-block collection-block" data-collection-id="{{ collection.id }}" {{ custom_attrs }} {% if animate %}data-cc-animate{% endif %}>
+  <div class="block-inner">
+    <a class="product-link" href="{{ collection.url }}">
+      <div class="image-cont">
+        {%- liquid
+          if custom_image
+            assign collection_image = custom_image
+          elsif collection.featured_image
+            assign collection_image = collection.featured_image
+          endif
+        -%}
+
+        {% if collection_image != blank %}
+          <div class="product-block__image product-block__image--primary product-block__image--active">
+            {% render 'responsive-image', image: collection_image, manual_image_load: manual_image_load, aspect_ratio: custom_aspect_ratio, cover: true, no_max_width: true %}
+          </div>
+        {% else %}
+          <div class="placeholder-image placeholder-image--shape-{{ settings.coll_grid_image_shape }}">{{ 'collection-1' | placeholder_svg_tag }}</div>
+        {% endif %}
+      </div>
+      <div class="product-info">
+        <div class="product-block__title">{{ collection.title }}</div>
+        {% if settings.coll_grid_show_count and collection.all_products_count > 0 %}
+          <div class="small">{{ 'collections.general.product_count' | t: count: collection.all_products_count }}</div>
+        {% endif %}
+      </div>
+    </a>
+  </div>
+</div>

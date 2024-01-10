@@ -1,0 +1,519 @@
+<div id="section-id-{{ section.id }}" class="{% if section.settings.use_alt_bg %}use-alt-bg{% endif %}" data-section-type="scrolling-banner" data-cc-animate>
+  {% style %}
+    #section-id-{{ section.id }} {
+      --vertical-padding: {{ section.settings.vertical_padding }}px;
+    }
+  {% endstyle %}
+
+  {%- unless section.settings.full_width -%}<div class="container container--not-mobile">{%- endunless -%}
+
+  <div class="marquee-container">
+    <div class="marquee marquee--{{ section.settings.direction }}
+        {% if section.settings.font == "heading" %} heading-font{% endif %}"
+        style="--duration: {{ 42 | minus: section.settings.speed }}s; --space: {{ section.settings.space }}px; --text-size: {{ section.settings.text_size }}px" role="marquee">
+      {%- capture scrolling_content -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'text' %}
+            {%- liquid
+              assign text = block.settings.text
+              if block.settings.stencil_all_text == false and block.settings.stencil_text != blank
+                assign words = block.settings.stencil_text | split: ","
+                for word in words
+                  assign trimmed_word = word | strip
+                  assign replacement_text = "{" | append: trimmed_word | append: "}"
+                  assign text = text | replace: trimmed_word, replacement_text
+                endfor
+
+                assign text = text | replace: "{", "<span class='marquee-stencil-this'>"
+                assign text = text | replace: "}", "</span>"
+              endif
+
+              if block.settings.link
+                assign contains_link = true
+              endif
+            -%}
+
+            <span class="marquee-item marquee-text{% if block.settings.stencil_all_text %} marquee-text--stencil{% endif %}" style="{% unless block.settings.color contains ',0)' %}--color: {{ block.settings.color }}{% endunless %}" {{ block.shopify_attributes }}>
+              {%- if block.settings.use_h1 -%}
+                <h1 class="marquee-item_h1">
+              {%- endif -%}
+              {%- if block.settings.link -%}
+                <a href="{{ block.settings.link }}">
+              {%- endif -%}
+              {{- text -}}
+              {%- if block.settings.link -%}
+                </a>
+              {%- endif -%}
+              {%- if block.settings.use_h1 -%}
+                </h1>
+              {%- endif -%}
+            </span>
+
+          {%- elsif block.type == 'icon' %}
+            <span class="marquee-item marquee-icon" style="--width: {{ block.settings.icon_width }}px; {% unless block.settings.color contains ',0)' %}--color: {{ block.settings.color }}{% endunless %}" {{ block.shopify_attributes }}>
+              {%- render 'icon', icon: block.settings.icon -%}
+            </span>
+
+          {%- elsif block.type == 'image' %}
+            <span class="marquee-item marquee-image" {{ block.shopify_attributes }}>
+              {%- if block.settings.link -%}
+                {%- assign contains_link = true -%}
+                <a href="{{ block.settings.link }}">
+              {%- endif -%}
+
+              {%- if block.settings.image != blank -%}
+                <div class="rimage-outer-wrapper" style="--width: {{ block.settings.image_width }}px; --ar-padding: {{ 1 | divided_by: block.settings.image.aspect_ratio | times: 100 }}%;">
+                  <div class="rimage-wrapper" style="padding-top: {{ 1 | divided_by: block.settings.image.aspect_ratio | times: 100 }}%">
+                    {%- assign img_url = block.settings.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+                    <img class="rimage__image lazyload fade-in"
+                      data-src="{{ img_url }}"
+                      data-widths="[{{ block.settings.image_width }}, {{ block.settings.image_width | times: 2}}]"
+                      data-aspectratio="{{ block.settings.image.aspect_ratio }}"
+                      data-sizes="auto"
+                      alt="{{ block.settings.image.alt | escape }}">
+                    <noscript>
+                      {%- capture image_width_key -%}{{ block.settings.image_width }}x{%- endcapture -%}
+                      <img class="rimage__image" src="{{ block.settings.image | img_url: image_width_key }}" alt="{{ image.alt | escape }}">
+                    </noscript>
+                  </div>
+                </div>
+              {%- else -%}
+                <span class="placeholder-image">
+                  {{- 'logo' | placeholder_svg_tag: 'placeholder-svg' -}}
+                </span>
+              {%- endif -%}
+
+              {%- if block.settings.link -%}
+                </a>
+              {%- endif -%}
+            </span>
+
+          {%- elsif block.type == 'button' %}
+            {%- liquid
+              if block.settings.link
+                assign contains_link = true
+              endif
+            -%}
+            <span class="marquee-item marquee-button" style="{% if block.settings.button_style == 'custom' %}--btn-col-bg: {{ block.settings.color_bg }}; --btn-col-text: {{ block.settings.color_text }}{% endif %}" {{ block.shopify_attributes }}>
+              <a href="{{ block.settings.link | default: '#' }}" class="btn btn--{{ block.settings.button_style }} btn--link"><span class="btn__text">{{ block.settings.text }}</span></a>
+            </span>
+
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endcapture -%}
+
+      {%- for i in (1..15) -%}
+        <span class="marquee-content{% if contains_link %} marquee-content--contains-link{% endif %}"{% unless forloop.first %} aria-hidden="true"{% endunless %}>
+          {%- if forloop.first -%}
+            {{ scrolling_content }}
+          {%- else -%}
+            {{ scrolling_content | replace: '<a ', '<a tabindex="-1" ' | replace: '<h1 class="marquee-item_h1">' , '<span>' | replace: '</h1>', '</span>' }}
+          {%- endif -%}
+        </span>
+      {%- endfor -%}
+    </div>
+  </div>
+
+  {%- unless section.settings.full_width -%}</div>{%- endunless -%}
+</div>
+
+{% schema %}
+{
+    "name": "Scrolling banner",
+    "class": "section-scrolling-banner",
+    "settings": [
+      {
+        "id": "full_width",
+        "type": "checkbox",
+        "label": "Full page width",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "use_alt_bg",
+        "label": "Use alternate section color",
+        "default": false
+      },
+      {
+        "type": "range",
+        "id": "text_size",
+        "min": 16,
+        "max": 200,
+        "step": 2,
+        "unit": "px",
+        "label": "Text size",
+        "default": 50
+      },
+      {
+        "type": "range",
+        "id": "vertical_padding",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Vertical padding",
+        "default": 20
+      },
+      {
+        "type": "range",
+        "id": "speed",
+        "min": 0.5,
+        "max": 40,
+        "step": 0.5,
+        "unit": "x",
+        "label": "Speed",
+        "default": 35
+      },
+      {
+        "type": "select",
+        "id": "direction",
+        "label": "Direction",
+        "options": [
+          {
+            "label": "Left to right",
+            "value": "right"
+          },
+          {
+            "label": "Right to left",
+            "value": "left"
+          }
+        ],
+        "default": "left"
+      },
+      {
+        "type": "select",
+        "id": "font",
+        "label": "Font",
+        "options": [
+          {
+            "label": "Base font",
+            "value": "base"
+          },
+          {
+            "label": "Heading font",
+            "value": "heading"
+          }
+        ],
+        "default": "heading"
+      },
+      {
+        "type": "range",
+        "id": "space",
+        "min": 0,
+        "max": 140,
+        "step": 5,
+        "unit": "px",
+        "label": "Space between items",
+        "default": 50
+      }
+    ],
+    "blocks": [
+      {
+        "type": "text",
+        "name": "Text",
+        "limit": 20,
+        "settings": [
+          {
+            "type": "text",
+            "id": "text",
+            "label": "Text",
+            "default": "Your scrolling text here"
+          },
+          {
+            "type": "color",
+            "id": "color",
+            "label": "Color",
+            "default": "rgba(0,0,0,0)"
+          },
+          {
+            "type": "url",
+            "id": "link",
+            "label": "Link"
+          },
+          {
+            "type": "checkbox",
+            "id": "use_h1",
+            "label": "Set as primary page heading",
+            "info": "Use <h1> tag. One per page recommended. [Read more](https://cleancanvas.co.uk/support/mode/section-h1-setting)",
+            "default": false
+          },
+          {
+            "type": "header",
+            "content": "Stencil text"
+          },
+          {
+            "type": "paragraph",
+            "content": "Some or all of your text can appear as a stencil outline. May not work in all browsers."
+          },
+          {
+            "type": "checkbox",
+            "id": "stencil_all_text",
+            "label": "Stencil all text",
+            "default": false
+          },
+          {
+            "type": "text",
+            "id": "stencil_text",
+            "label": "Text to stencil",
+            "info": "Case-sensitive. To stencil words that are not next to each other, use a comma. For example 'shipping, returns'"
+          }
+        ]
+      },
+      {
+        "type": "icon",
+        "name": "Icon",
+        "limit": 20,
+        "settings": [
+          {
+            "type": "select",
+            "id": "icon",
+            "label": "Icon",
+            "default": "star",
+            "options": [
+              {
+                "value": "award",
+                "label": "Award"
+              },
+              {
+                "value": "box",
+                "label": "Box"
+              },
+              {
+                "value": "briefcase",
+                "label": "Briefcase"
+              },
+              {
+                "value": "calendar",
+                "label": "Calendar"
+              },
+              {
+                "value": "chat_bubble",
+                "label": "Chat bubble"
+              },
+              {
+                "value": "check_mark",
+                "label": "Check mark"
+              },
+              {
+                "value": "check_mark_in_circle",
+                "label": "Check mark in circle"
+              },
+              {
+                "value": "clock",
+                "label": "Clock"
+              },
+              {
+                "value": "credit_card",
+                "label": "Credit card"
+              },
+              {
+                "value": "dollar_sign",
+                "label": "Dollar sign"
+              },
+              {
+                "value": "dryer",
+                "label": "Dryer"
+              },
+              {
+                "value": "eye",
+                "label": "Eye"
+              },
+              {
+                "value": "feather",
+                "label": "Feather"
+              },
+              {
+                "value": "gift",
+                "label": "Gift"
+              },
+              {
+                "value": "heart",
+                "label": "Heart"
+              },
+              {
+                "value": "iron",
+                "label": "Iron"
+              },
+              {
+                "value": "leaf",
+                "label": "Leaf"
+              },
+              {
+                "value": "leather",
+                "label": "Leather"
+              },
+              {
+                "value": "lock",
+                "label": "Lock"
+              },
+              {
+                "value": "map_pin",
+                "label": "Map pin"
+              },
+              {
+                "value": "pants",
+                "label": "Pants"
+              },
+              {
+                "value": "percent",
+                "label": "Percent"
+              },
+              {
+                "value": "plane",
+                "label": "Plane"
+              },
+              {
+                "value": "price_tag",
+                "label": "Price tag"
+              },
+              {
+                "value": "question_mark",
+                "label": "Question mark"
+              },
+              {
+                "value": "return",
+                "label": "Return"
+              },
+              {
+                "value": "ruler",
+                "label": "Ruler"
+              },
+              {
+                "value": "scissors",
+                "label": "Scissors"
+              },
+              {
+                "value": "shirt",
+                "label": "Shirt"
+              },
+              {
+                "value": "shoe",
+                "label": "Shoe"
+              },
+              {
+                "value": "silhouette",
+                "label": "Silhouette"
+              },
+              {
+                "value": "star",
+                "label": "Star"
+              },
+              {
+                "value": "truck",
+                "label": "Truck"
+              },
+              {
+                "value": "washing",
+                "label": "Washing"
+              }
+            ]
+          },
+          {
+            "type": "range",
+            "id": "icon_width",
+            "min": 10,
+            "max": 200,
+            "step": 5,
+            "label": "Icon width",
+            "unit": "px",
+            "default": 50
+          },
+          {
+            "type": "color",
+            "id": "color",
+            "label": "Color",
+            "default": "rgba(0,0,0,0)"
+          }
+        ]
+      },
+      {
+        "type": "image",
+        "name": "Image",
+        "limit": 20,
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type": "range",
+            "id": "image_width",
+            "min": 10,
+            "max": 400,
+            "step": 5,
+            "label": "Image width",
+            "unit": "px",
+            "default": 100
+          },
+          {
+            "type": "url",
+            "id": "link",
+            "label": "Link"
+          }
+        ]
+      },
+      {
+        "type": "button",
+        "name": "Button",
+        "limit": 20,
+        "settings": [
+          {
+            "type": "text",
+            "id": "text",
+            "label": "Text",
+            "default": "Read more"
+          },
+          {
+            "type": "url",
+            "id": "link",
+            "label": "Link"
+          },
+          {
+            "type": "select",
+            "id": "button_style",
+            "label": "Button style",
+            "default": "primary",
+            "options": [
+              {
+                "label": "Primary",
+                "value": "primary"
+              },
+              {
+                "label": "Secondary",
+                "value": "secondary"
+              },
+              {
+                "label": "Custom",
+                "value": "custom"
+              }
+            ]
+          },
+          {
+            "type": "color",
+            "id": "color_bg",
+            "label": "Custom background color",
+            "default": "#fff"
+          },
+          {
+            "type": "color",
+            "id": "color_text",
+            "label": "Custom text color",
+            "default": "#333"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Scrolling banner",
+        "settings": {},
+        "blocks": [
+          {
+            "type": "text"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,848 @@
+{%- assign mobile_expand_with_entire_link = true -%}
+
+{% style %}
+  .logo img {
+    width: {{ section.settings.logo_img_width_int }}px;
+  }
+  .logo-area__middle--logo-image {
+    max-width: {{ section.settings.logo_img_width_int }}px;
+  }
+  @media (max-width: 767.98px) {
+    .logo img {
+      width: {{ section.settings.mobile_logo_img_width_int }}px;
+    }
+  }
+  {%- if section.settings.enable_sticky -%}
+  .section-header {
+    position: -webkit-sticky;
+    position: sticky;
+  }
+  {%- endif -%}
+  {%- if section.settings.enable_transparent and template.name == 'index' -%}
+    .section-header {
+      margin-bottom: calc(var(--theme-header-height) * -1);
+      --transparent-header-text-color: {{ section.settings.transparent_color }};
+    }
+    .section-store-messages {
+      display: none;
+    }
+    #content .shopify-section:first-child .overlay-text {
+      top: var(--theme-header-height);
+    }
+  {%- endif -%}
+{% endstyle %}
+
+{%- if template == 'gift_card' -%}
+
+{% comment %} Gift card template logo {% endcomment %}
+<meta itemprop="url" content="{{ shop.url }}">
+<meta itemprop="name" content="{{ shop.name }}">
+{%- if section.settings.logo != blank -%}
+  <h1 class="logo" itemscope itemtype="http://schema.org/Organization">
+    {% capture img_size %}{{ section.settings.logo_img_width_int | times: 2 }}x{% endcapture %}
+    <img src="{{ section.settings.logo | img_url: img_size }}" alt="{{ section.settings.logo.alt | escape }}" itemprop="logo" width="{{ section.settings.logo.width }}" height="{{ section.settings.logo.height }}" />
+  </h1>
+{%- else -%}
+  <h1>{{ shop.name }}</h1>
+{%- endif -%}
+
+{%- else -%}
+
+{%- assign featured_links = section.settings.nav_featured_link | split: ', ' -%}
+<div data-section-type="header" data-cc-animate>
+  <div id="pageheader" class="pageheader pageheader--layout-{{ section.settings.menu_layout }}{% if section.settings.enable_transparent and template.name == 'index' %} pageheader--transparent-permitted pageheader--transparent{% endif %}{% if section.settings.enable_sticky %} pageheader--sticky{% endif %}">
+    <div class="logo-area container container--no-max">
+      <div class="logo-area__left">
+        <div class="logo-area__left__inner">
+          <button class="button notabutton mobile-nav-toggle" aria-label="{{ 'general.navigation.menu_toggle_aria_label' | t | escape }}" aria-controls="main-nav">
+            {%- render 'svg-menu' -%}
+          </button>
+          {% if section.settings.enable_search %}
+            <a class="show-search-link" href="{{ routes.search_url }}" aria-label="{{ 'layout.search.open' | t }}">
+              <span class="show-search-link__icon">
+                {%- render 'svg-search' -%}
+              </span>
+              <span class="show-search-link__text{% if section.settings.icon_strategy == 'icons_only' %} visually-hidden{% endif %}">
+                {{- 'layout.search.open' | t -}}
+              </span>
+            </a>
+          {% endif %}
+          {% if section.settings.menu_layout contains 'inline' %}
+            <div class="navigation navigation--left" role="navigation" aria-label="{{ 'general.navigation.main_navigation_aria_label' | t | escape }}">
+              <div class="navigation__tier-1-container">
+                <ul class="navigation__tier-1">
+                  {% for link in linklists[section.settings.menu_linklist].links %}
+                    {%- liquid
+                      assign has_dropdown = false
+                      if link.links != blank
+                        assign has_dropdown = true
+                      endif
+                      assign use_columns = false
+                      if link.levels >= 2
+                        assign use_columns = true
+                      else
+                        assign link_title_sanitised = link.title | downcase | strip
+                        for block in section.blocks
+                          assign dropdown_link_title_sanitised = block.settings.dropdown_link_title | downcase | strip
+                          if dropdown_link_title_sanitised == link_title_sanitised
+                            assign use_columns = true
+                            assign has_dropdown = true
+                          endif
+                        endfor
+                      endif
+                    -%}
+                    <li class="navigation__item{% if has_dropdown %} navigation__item--with-children {% if use_columns %}navigation__item--with-mega-menu{% else %}navigation__item--with-small-menu{% endif %}{% endif %}{% if featured_links contains link.title %} featured-link{% endif %}{% if link.active %} navigation__item--active{% endif %}">
+                      <a href="{{ link.url }}" class="navigation__link" {% if has_dropdown %}aria-haspopup="true" aria-expanded="false" aria-controls="NavigationTier2-{{ forloop.index }}"{% endif %}>
+                        {{- link.title | escape -}}
+                      </a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="logo-area__middle logo-area__middle--logo-{% if section.settings.logo != blank %}image{% else %}text{% endif %}">
+        <div class="logo-area__middle__inner">
+          <div class="logo">
+            {%- if request.page_type == 'index' and section.settings.logo_h1 -%}
+              <h1 class="logo__h1">
+            {%- endif -%}
+
+            <a class="logo__link" href="{{ routes.root_url }}" title="{{ shop.name }}">
+              {%- if section.settings.logo != blank -%}
+                {%- capture img_size -%}{{ section.settings.logo_img_width_int | times: 2 }}x{%- endcapture -%}
+                <img class="logo__image" src="{{ section.settings.logo | img_url: img_size }}" alt="{{ section.settings.logo.alt | default: shop.name | escape }}" itemprop="logo" width="{{ section.settings.logo.width }}" height="{{ section.settings.logo.height }}" />
+
+                {%- if section.settings.enable_transparent and template.name == 'index' and section.settings.transparent_logo != blank -%}
+                  <img class="logo__image-transparent" src="{{ section.settings.transparent_logo | img_url: img_size }}" alt="{{ section.settings.transparent_logo.alt | escape }}" width="{{ section.settings.transparent_logo.width }}" height="{{ section.settings.transparent_logo.height }}" aria-hidden="true" />
+                {%- endif -%}
+
+              {%- else -%}
+                <span class="logotext">{{ shop.name }}</span>
+              {%- endif -%}
+            </a>
+
+            {%- if request.page_type == 'index' and section.settings.logo_h1 -%}
+              </h1>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+
+      <div class="logo-area__right">
+        <div class="logo-area__right__inner">
+          {% if shop.customer_accounts_enabled %}
+            {% if customer %}
+              <a class="header-account-link" href="{{ routes.account_url }}" aria-label="{{ 'layout.customer.account' | t | escape }}">
+                <span class="header-account-link__text desktop-only{% if section.settings.icon_strategy == 'icons_only' %} visually-hidden{% endif %}">{{ 'layout.customer.account' | t | escape }}</span>
+                <span class="header-account-link__icon{% if section.settings.icon_strategy == 'icons_cart_search' %} mobile-only{% endif %}">{% render 'svg-user' %}</span>
+              </a>
+            {% else %}
+              <a class="header-account-link" href="{{ routes.account_login_url }}" aria-label="{{ 'layout.customer.account' | t | escape }}">
+                <span class="header-account-link__text desktop-only{% if section.settings.icon_strategy == 'icons_only' %} visually-hidden{% endif %}">{{ 'layout.customer.account' | t | escape }}</span>
+                <span class="header-account-link__icon{% if section.settings.icon_strategy == 'icons_cart_search' %} mobile-only{% endif %}">{% render 'svg-user' %}</span>
+              </a>
+            {% endif %}
+          {% endif %}
+          {% if section.settings.enable_search %}
+            <a class="show-search-link" href="{{ routes.search_url }}">
+              <span class="show-search-link__text{% if section.settings.icon_strategy == 'icons_only' %} visually-hidden{% endif %}">
+                {{- 'layout.search.open' | t -}}
+              </span>
+              <span class="show-search-link__icon">
+                {%- render 'svg-search' -%}
+              </span>
+            </a>
+          {% endif %}
+          <a href="{{ routes.cart_url }}" class="cart-link">
+            <span class="cart-link__label{% if section.settings.icon_strategy == 'icons_only' %} visually-hidden{% endif %}">
+              {{- 'layout.header.cart' | t | escape -}}
+            </span>
+            <span class="cart-link__icon">
+              {%- if section.settings.cart_icon == 'basket' -%}
+                {%- render 'svg-basket' -%}
+              {%- elsif section.settings.cart_icon == 'bag' -%}
+                {%- render 'svg-bag' -%}
+              {%- else -%}
+                {%- render 'svg-cart' -%}
+              {%- endif -%}
+              {%- if cart.item_count > 0 -%}
+                <span class="cart-link__count">{{ cart.item_count }}</span>
+              {%- endif -%}
+            </span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    {%- if section.settings.enable_search -%}
+      {%- liquid
+        assign show_search_suggestions = false
+        if section.settings.search_suggestions_title != blank or section.settings.search_suggestions_menu != blank
+          assign show_search_suggestions = true
+        endif
+      -%}
+      <div id="main-search" class="main-search {% if show_search_suggestions %}main-search--with-suggestions{% endif %}"
+          data-live-search="{{ settings.enable_live_search }}"
+          data-live-search-price="{{ settings.live_search_show_price }}"
+          data-live-search-vendor="{{ settings.live_search_show_vendor }}"
+          data-live-search-meta="{{ settings.live_search_search_meta }}"
+          data-per-row-mob="{{ settings.prod_thumb_mob_per_row }}">
+
+        <div class="main-search__container container">
+          <button class="main-search__close button notabutton" aria-label="{{ 'layout.search.close' | t | escape }}">{% render 'svg-x' %}</button>
+
+          <form class="main-search__form" action="{{ routes.search_url }}" method="get" autocomplete="off">
+            <input type="hidden" name="type" value="{{ settings.search_type }}" />
+            <input type="hidden" name="options[prefix]" value="last" />
+            <div class="main-search__input-container">
+              <input class="main-search__input" type="text" name="q" autocomplete="off" placeholder="{{ 'layout.search.placeholder' | t | escape }}" aria-label="{{ 'layout.search.title' | t | escape }}" />
+            </div>
+            <button class="main-search__button button notabutton" type="submit" aria-label="{{ 'layout.header.search_submit' | t }}">{% render 'svg-search' %}</button>
+          </form>
+
+          <div class="main-search__results"></div>
+
+          {% if show_search_suggestions %}
+            <div class="main-search__suggestions">
+              {% if section.settings.search_suggestions_title != blank %}
+                <div class="h4-style heading-font">{{ section.settings.search_suggestions_title }}</div>
+              {% endif %}
+              {% if section.settings.search_suggestions_menu != blank %}
+                {%- liquid
+                  assign suggestions_menu = linklists[section.settings.search_suggestions_menu]
+
+                  if settings.coll_grid_image_shape == 'portrait-23'
+                    assign collection_aspect_ratio = 0.67
+                  elsif settings.coll_grid_image_shape == 'portrait-45'
+                    assign collection_aspect_ratio = 0.8
+                  elsif settings.coll_grid_image_shape == 'square'
+                    assign collection_aspect_ratio = 1.0
+                  elsif settings.coll_grid_image_shape == 'landscape-54'
+                    assign collection_aspect_ratio = 1.25
+                  elsif settings.coll_grid_image_shape == 'landscape-32'
+                    assign collection_aspect_ratio = 1.50
+                  elsif settings.coll_grid_image_shape == 'tallest'
+                    assign collection_aspect_ratio = 999
+                    for link in suggestions_menu.links
+                      for child_link in link.links
+                        if child_link.type == 'collection_link'
+                          if child_link.object.featured_image.aspect_ratio < collection_aspect_ratio
+                            assign collection_aspect_ratio = child_link.object.featured_image.aspect_ratio
+                          endif
+                        endif
+                      endfor
+
+                      if link.type == 'collection_link'
+                        if link.object.featured_image.aspect_ratio < collection_aspect_ratio
+                          assign collection_aspect_ratio = link.object.featured_image.aspect_ratio
+                        endif
+                      endif
+                    endfor
+                  else
+                    assign collection_aspect_ratio = 0
+                    for link in suggestions_menu.links
+                      for child_link in link.links
+                        if child_link.type == 'collection_link' and child_link.object.featured_image.aspect_ratio > collection_aspect_ratio
+                          assign collection_aspect_ratio = child_link.object.featured_image.aspect_ratio
+                        endif
+                      endfor
+
+                      if link.type == 'collection_link' and link.object.featured_image.aspect_ratio > collection_aspect_ratio
+                        assign collection_aspect_ratio = link.object.featured_image.aspect_ratio
+                      endif
+                    endfor
+                  endif
+
+                  if settings.prod_thumb_shape == 'portrait-23'
+                    assign product_aspect_ratio = 0.67
+                  elsif settings.prod_thumb_shape == 'portrait-45'
+                    assign product_aspect_ratio = 0.8
+                  elsif settings.prod_thumb_shape == 'square'
+                    assign product_aspect_ratio = 1.0
+                  elsif settings.prod_thumb_shape == 'landscape-54'
+                    assign product_aspect_ratio = 1.25
+                  elsif settings.prod_thumb_shape == 'landscape-32'
+                    assign product_aspect_ratio = 1.50
+                  elsif settings.prod_thumb_shape == 'tallest'
+                    assign product_aspect_ratio = 99
+                    for link in suggestions_menu.links
+                      for child_link in link.links
+                        if child_link.type == 'product_link' and child_link.object.featured_media.preview_image.aspect_ratio < product_aspect_ratio
+                          assign product_aspect_ratio = child_link.object.featured_media.preview_image.aspect_ratio
+                        endif
+                      endfor
+                      if link.type == 'product_link' and link.object.featured_media.preview_image.aspect_ratio < product_aspect_ratio
+                        assign product_aspect_ratio = link.object.featured_media.preview_image.aspect_ratio
+                      endif
+                    endfor
+                  else
+                    assign product_aspect_ratio = 0
+                    for link in suggestions_menu.links
+                      for child_link in link.links
+                        if child_link.type == 'product_link' and child_link.object.featured_media.preview_image.aspect_ratio > product_aspect_ratio
+                          assign product_aspect_ratio = child_link.object.featured_media.preview_image.aspect_ratio
+                        endif
+                      endfor
+                      if link.type == 'product_link' and link.object.featured_media.preview_image.aspect_ratio > product_aspect_ratio
+                        assign product_aspect_ratio = link.object.featured_media.preview_image.aspect_ratio
+                      endif
+                    endfor
+                  endif
+                -%}
+                <div class="search-suggestions">
+                  <div class="search-suggestions__item-row">
+                    {% for link in suggestions_menu.links %}
+                      {% if link.links != blank %}
+                        <div class="search-suggestions__item search-suggestions__item--with-row">
+                          <div class="search-suggestions__heading h5-style heading-font"><a href="{{ link.url }}">{{ link.title | escape }}</a></div>
+                          <div class="search-suggestions__item-row">
+                            {% for child_link in link.links %}
+                              <div class="search-suggestions__item">
+                                {% if child_link.type == 'collection_link' %}
+                                  {% render 'collection-block', collection: child_link.object, custom_aspect_ratio: collection_aspect_ratio, manual_image_load: true %}
+                                {% elsif child_link.type == 'product_link' %}
+                                  {% render 'product-block', product: child_link.object, custom_aspect_ratio: product_aspect_ratio, manual_image_load: true %}
+                                {% else %}
+                                  <a class="search-suggestions__link" href="{{ child_link.url }}">{{ child_link.title | escape }}</a>
+                                {% endif %}
+                              </div>
+                            {% endfor %}
+                          </div>
+                        </div>
+                      {% else %}
+                        <div class="search-suggestions__item">
+                          {% if link.type == 'collection_link' %}
+                            {% render 'collection-block', collection: link.object, custom_aspect_ratio: collection_aspect_ratio, manual_image_load: true %}
+                          {% elsif link.type == 'product_link' %}
+                            {% render 'product-block', product: link.object, custom_aspect_ratio: product_aspect_ratio, manual_image_load: true %}
+                          {% else %}
+                            <a class="search-suggestions__link" href="{{ link.url }}">{{ link.title | escape }}</a>
+                          {% endif %}
+                        </div>
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+                </div>
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+
+  <div id="main-nav" class="desktop-only">
+    <div class="navigation navigation--main" role="navigation" aria-label="{{ 'general.navigation.main_navigation_aria_label' | t | escape }}">
+      <div class="navigation__tier-1-container">
+        {% render 'main-nav-links', link_list: section.settings.menu_linklist, mobile: false, featured_links: featured_links %}
+      </div>
+    </div>
+  </div>
+
+  {%- assign mobile_linklist = section.settings.menu_linklist_mobile | default: section.settings.menu_linklist -%}
+  <script class="mobile-navigation-drawer-template" type="text/template">
+    <div class="mobile-navigation-drawer" data-mobile-expand-with-entire-link="{{ mobile_expand_with_entire_link }}">
+      <div class="navigation navigation--main" role="navigation" aria-label="{{ 'general.navigation.main_navigation_aria_label' | t | escape }}">
+        <div class="navigation__tier-1-container">
+          <div class="navigation__mobile-header">
+            <a href="#" class="mobile-nav-back ltr-icon" aria-label="{{ 'layout.navigation.back' | t }}">{% render 'svg-chevron-left', stroke_width: 1.3 %}</a>
+            <span class="mobile-nav-title"></span>
+            <a href="#" class="mobile-nav-toggle"  aria-label="{{ 'general.accessibility_labels.close' | t }}">{% render 'svg-x', stroke_width: 1.3 %}</a>
+          </div>
+          {% render 'main-nav-links', link_list: mobile_linklist, mobile: true, featured_links: featured_links %}
+          {% if section.settings.enable_nav_mob_products %}
+            <div class="navigation__mobile-products">
+              <div class="navigation__mobile-products-title">{{ section.settings.nav_mob_products_title | escape }}</div>
+              <div class="product-list product-list--scrollarea">
+                {%- liquid
+                  if settings.prod_thumb_shape == 'portrait-23'
+                    assign chosen_aspect_ratio = 0.67
+                  elsif settings.prod_thumb_shape == 'portrait-45'
+                    assign chosen_aspect_ratio = 0.8
+                  elsif settings.prod_thumb_shape == 'square'
+                    assign chosen_aspect_ratio = 1.0
+                  elsif settings.prod_thumb_shape == 'landscape-54'
+                    assign chosen_aspect_ratio = 1.25
+                  elsif settings.prod_thumb_shape == 'landscape-32'
+                    assign chosen_aspect_ratio = 1.50
+                  elsif settings.prod_thumb_shape == 'tallest'
+                    assign chosen_aspect_ratio = 99
+                    for product in collections[section.settings.nav_mob_products_collection].products limit: product_limit
+                      if product.featured_media.preview_image.aspect_ratio < chosen_aspect_ratio
+                        assign chosen_aspect_ratio = product.featured_media.preview_image.aspect_ratio
+                      endif
+                    endfor
+                  else
+                    assign chosen_aspect_ratio = 0
+                    for product in collections[section.settings.nav_mob_products_collection].products limit: product_limit
+                      if product.featured_media.preview_image.aspect_ratio > chosen_aspect_ratio
+                        assign chosen_aspect_ratio = product.featured_media.preview_image.aspect_ratio
+                      endif
+                    endfor
+                  endif
+                -%}
+                {% for product in collections[section.settings.nav_mob_products_collection].products limit: 10 %}
+                  {% render 'product-block', product: product, custom_aspect_ratio: chosen_aspect_ratio, no_swiping: true, no_quick_buy_markup: true, manual_image_load: true %}
+                {% endfor %}
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </script>
+
+  <a href="#" class="header-shade mobile-nav-toggle" aria-label="{{ 'general.navigation_menu.toggle_aria_label' }}"></a>
+</div>
+
+{%- if section.settings.menu_layout contains 'inline' -%}
+<script id="InlineNavigationCheckScript">
+  theme.inlineNavigationCheck = function() {
+    var pageHeader = document.querySelector('.pageheader'),
+        inlineNavContainer = pageHeader.querySelector('.logo-area__left__inner'),
+        inlineNav = inlineNavContainer.querySelector('.navigation--left');
+    if (inlineNav && getComputedStyle(inlineNav).display != 'none') {
+      var inlineMenuCentered = document.querySelector('.pageheader--layout-inline-menu-center'),
+          logoContainer = document.querySelector('.logo-area__middle__inner');
+      if(inlineMenuCentered) {
+        var rightWidth = document.querySelector('.logo-area__right__inner').clientWidth,
+            middleWidth = logoContainer.clientWidth,
+            logoArea = document.querySelector('.logo-area'),
+            computedLogoAreaStyle = getComputedStyle(logoArea),
+            logoAreaInnerWidth = logoArea.clientWidth - Math.ceil(parseFloat(computedLogoAreaStyle.paddingLeft)) - Math.ceil(parseFloat(computedLogoAreaStyle.paddingRight)),
+            availableNavWidth = logoAreaInnerWidth - Math.max(rightWidth, middleWidth) * 2 - 40;
+        inlineNavContainer.style.maxWidth = availableNavWidth + 'px';
+      }
+
+      var firstInlineNavLink = inlineNav.querySelector('.navigation__item:first-child'),
+          lastInlineNavLink = inlineNav.querySelector('.navigation__item:last-child');
+      if (lastInlineNavLink) {
+        var inlineNavWidth = null;
+        if(document.querySelector('html[dir=rtl]')) {
+          inlineNavWidth = firstInlineNavLink.offsetLeft - lastInlineNavLink.offsetLeft + firstInlineNavLink.offsetWidth;
+        } else {
+          inlineNavWidth = lastInlineNavLink.offsetLeft - firstInlineNavLink.offsetLeft + lastInlineNavLink.offsetWidth;
+        }
+        if (inlineNavContainer.offsetWidth >= inlineNavWidth) {
+          pageHeader.classList.add('pageheader--layout-inline-permitted');
+          var tallLogo = logoContainer.clientHeight > lastInlineNavLink.clientHeight + 1;
+          if (tallLogo) {
+            inlineNav.classList.add('navigation--tight-underline');
+          } else {
+            inlineNav.classList.remove('navigation--tight-underline');
+          }
+        } else {
+          pageHeader.classList.remove('pageheader--layout-inline-permitted');
+        }
+      }
+    }
+  }
+  theme.inlineNavigationCheck();
+</script>
+{%- endif -%}
+
+{%- endif -%}
+
+
+{% schema %}
+  {
+    "name": "Header",
+    "class": "section-header",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Logo",
+        "info": "520 x 200px (recommended)"
+      },
+      {
+        "type": "range",
+        "id": "logo_img_width_int",
+        "min": 30,
+        "max": 500,
+        "step": 5,
+        "unit": "px",
+        "label": "Logo width",
+        "default": 180
+      },
+      {
+        "type": "range",
+        "id": "mobile_logo_img_width_int",
+        "min": 30,
+        "max": 300,
+        "step": 5,
+        "unit": "px",
+        "label": "Mobile logo width",
+        "default": 100
+      },
+      {
+        "type": "checkbox",
+        "id": "logo_h1",
+        "label": "Enable logo <h1> on home page",
+        "info": "For SEO. Deselect only if another section on the home page contains a primary page heading. [Learn more](https://cleancanvas.co.uk/support/symmetry/section-h1-setting)",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_sticky",
+        "label": "Enable sticky header",
+        "default": false
+      },
+      {
+        "type": "header",
+        "content": "Transparent header"
+      },
+      {
+        "type": "paragraph",
+        "content": "Home page only. Ensure a full width image section is at the top, like a slideshow."
+      },
+      {
+        "type": "paragraph",
+        "content": "Store messages will be hidden."
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_transparent",
+        "label": "Enable transparent header",
+        "default": false
+      },
+      {
+        "type": "color",
+        "id": "transparent_color",
+        "label": "Text color",
+        "default": "#ffffff"
+      },
+      {
+        "type": "image_picker",
+        "id": "transparent_logo",
+        "label": "Logo",
+        "info": "Match your main logo size."
+      },
+      {
+        "type": "header",
+        "content": "Navigation"
+      },
+      {
+        "type": "link_list",
+        "id": "menu_linklist",
+        "label": "Menu",
+        "default": "main-menu"
+      },
+      {
+        "type": "link_list",
+        "id": "menu_linklist_mobile",
+        "label": "Mobile menu",
+        "info": "Select a different menu for mobile. Main menu is used if not selected."
+      },
+      {
+        "type": "select",
+        "id": "menu_layout",
+        "label": "Menu alignment",
+        "info": "Alignment will switch to 'Underneath' if the links do not fit beside the logo",
+        "options": [
+          {
+            "value": "inline-menu-left",
+            "label": "Left"
+          },
+          {
+            "value": "inline-menu-center",
+            "label": "Center"
+          },
+          {
+            "value": "underneath",
+            "label": "Underneath"
+          }
+        ],
+        "default": "underneath"
+      },
+      {
+        "type": "text",
+        "id": "nav_featured_link",
+        "label": "Featured link",
+        "info": "Enter the title of a link to highlight it in a different color",
+        "default": "Sale"
+      },
+      {
+        "type": "header",
+        "content": "Mobile navigation"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_mobile_promo_carousel",
+        "label": "Enable carousel layout for menu promotions",
+        "info": "Disabled for dropdown menus containing only promotions",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_nav_mob_products",
+        "label": "Enable featured products",
+        "info": "Shows beneath the main menu",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "nav_mob_products_title",
+        "label": "Featured products title",
+        "default": "Best Sellers"
+      },
+      {
+        "type": "collection",
+        "id": "nav_mob_products_collection",
+        "label": "Featured products collection"
+      },
+      {
+        "type": "header",
+        "content": "Search"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_search",
+        "label": "Enable search",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "search_suggestions_title",
+        "label": "Suggestions title",
+        "info": "Suggestions show when the search is opened."
+      },
+      {
+        "type": "link_list",
+        "id": "search_suggestions_menu",
+        "label": "Suggestions menu",
+        "info": "Dropdown menus will show as separate rows. Links to collections and products will show images."
+      },
+      {
+        "type": "header",
+        "content": "Icons"
+      },
+      {
+        "type": "select",
+        "id": "icon_strategy",
+        "label": "Show icons",
+        "info": "Only icons show on mobile",
+        "options": [
+          {
+            "value": "icons_cart_search",
+            "label": "On cart and search"
+          },
+          {
+            "value": "icons_all",
+            "label": "On all links"
+          },
+          {
+            "value": "icons_only",
+            "label": "Only icons, no text"
+          }
+        ],
+        "default": "icons_cart_search"
+      },
+      {
+        "type": "select",
+        "id": "cart_icon",
+        "label": "Cart icon",
+        "options": [
+          {
+            "value": "bag",
+            "label": "Bag"
+          },
+          {
+            "value": "basket",
+            "label": "Basket"
+          },
+          {
+            "value": "cart",
+            "label": "Cart"
+          }
+        ],
+        "default": "basket"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "menu-promotion-small",
+        "name": "Small menu promotion",
+        "settings": [
+          {
+            "type": "paragraph",
+            "content": "Menu promotions are shown in dropdown menus. [Read more](https://cleancanvas.co.uk/support/symmetry/header)"
+          },
+          {
+            "type": "text",
+            "id": "dropdown_link_title",
+            "label": "Link name",
+            "info": "The name of any top-level link"
+          },
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+          },
+          {
+            "type": "url",
+            "id": "link_url",
+            "label": "Link URL"
+          }
+        ]
+      },
+      {
+        "type": "menu-promotion-large",
+        "name": "Wide menu promotion",
+        "settings": [
+          {
+            "type": "paragraph",
+            "content": "Menu promotions are shown in dropdown menus. [Read more](https://cleancanvas.co.uk/support/symmetry/header)"
+          },
+          {
+            "type": "text",
+            "id": "dropdown_link_title",
+            "label": "Link name",
+            "info": "The name of any top-level link"
+          },
+          {
+            "type": "image_picker",
+            "id": "desktop_image",
+            "label": "Desktop image"
+          },
+          {
+            "type": "image_picker",
+            "id": "mobile_image",
+            "label": "Mobile image"
+          },
+          {
+            "type": "checkbox",
+            "id": "enable_fade",
+            "label": "Enable image fade",
+            "default": false
+          },
+          {
+            "type": "text",
+            "id": "subheading",
+            "label": "Subheading",
+            "default": "Tell your story"
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Heading",
+            "default": "Wide menu promotion"
+          },
+          {
+            "type": "richtext",
+            "id": "text",
+            "label": "Text",
+            "default": "<p>Pair text with an image to give customers insight into your brand. Tell a story, explain a product detail, or describe a new promotion.<\/p>"
+          },
+          {
+            "type": "text",
+            "id": "button_1_label",
+            "label": "Button 1",
+            "default": "Shop this"
+          },
+          {
+            "type": "url",
+            "id": "button_1_link",
+            "label": "Button 1 link"
+          },
+          {
+            "type": "select",
+            "id": "button_1_style",
+            "label": "Button 1 style",
+            "default": "secondary",
+            "options": [
+              {
+                "label": "Button - primary",
+                "value": "primary"
+              },
+              {
+                "label": "Button - secondary",
+                "value": "secondary"
+              },
+              {
+                "label": "Link",
+                "value": "link"
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "id": "button_2_label",
+            "label": "Button 2",
+            "default": "Shop all"
+          },
+          {
+            "type": "url",
+            "id": "button_2_link",
+            "label": "Button 2 link"
+          },
+          {
+            "type": "select",
+            "id": "button_2_style",
+            "label": "Button 2 style",
+            "default": "primary",
+            "options": [
+              {
+                "label": "Button - primary",
+                "value": "primary"
+              },
+              {
+                "label": "Button - secondary",
+                "value": "secondary"
+              },
+              {
+                "label": "Link",
+                "value": "link"
+              }
+            ]
+          },
+          {
+            "type": "select",
+            "id": "image_position",
+            "label": "Image alignment",
+            "default": "right",
+            "options": [
+              {
+                "value": "left",
+                "label": "Left"
+              },
+              {
+                "value": "right",
+                "label": "Right"
+              }
+            ]
+          },
+          {
+            "type": "select",
+            "id": "text_alignment",
+            "label": "Text alignment",
+            "default": "center",
+            "options": [
+              {
+                "value": "left",
+                "label": "Left"
+              },
+              {
+                "value": "center",
+                "label": "Center"
+              },
+              {
+                "value": "right",
+                "label": "Right"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

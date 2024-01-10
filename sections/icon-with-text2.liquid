@@ -1,0 +1,62 @@
+<style>
+    #shopify-section-{{section.id}} .iwt2-item{
+        width: {{100 | divided_by: section.blocks.size}}%;
+    }
+</style>
+<div class="iwt2 container">
+  <div class="iwt2-wrapper">
+    {% for block in section.blocks %}
+      <div class="iwt2-item">
+        <div class="iwt2__img"><img src="{{block.settings.icon | img_url:'100x'}}"></div>
+        <h2 class="iwt2__heading">{{ block.settings.title }}</h2>
+        <div class="iwt2__description">{{ block.settings.description }}</div>
+      </div>
+    {% endfor %}
+  </div>
+  <div class="iwt2__btn">
+    <a class="btn btn--secondary" href="{{section.settings.btn_link}}">{{ section.settings.btn_text }}</a>
+  </div>
+
+</div>
+{% schema %}
+  {
+    "name": "Icon with text 2",
+    "settings": [
+      {
+        "type": "text",
+        "id": "btn_text",
+        "label": "Button Label"
+      }, {
+        "type": "url",
+        "id": "btn_link",
+        "label": "Button Link"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "item",
+        "name": "Item",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "icon",
+            "label": "Icon"
+          }, {
+            "type": "text",
+            "id": "title",
+            "label": "Heading"
+          }, {
+            "type": "richtext",
+            "id": "description",
+            "label": "Description"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Icon with text 2"
+      }
+    ]
+  }
+{% endschema %}

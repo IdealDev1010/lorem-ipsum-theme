@@ -1,0 +1,13 @@
+{
+  "sections": {
+    "main": {
+      "type": "custom-page",
+      "settings": {
+        "links": "sidebar-menu"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

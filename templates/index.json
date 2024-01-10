@@ -1,0 +1,154 @@
+{
+  "sections": {
+    "bbeff370-6694-4003-a68b-b46d229eccd5": {
+      "type": "gallery",
+      "blocks": {
+        "template--16296339308699__bbeff370-6694-4003-a68b-b46d229eccd5-image-3": {
+          "type": "image",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/cork-handled-fishing-rod.jpg",
+            "alignment": "center center",
+            "enlarge_image": false,
+            "subheading": "everything you need",
+            "title": "fishing",
+            "description": "<p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.<\/p>",
+            "button_label": "shop fishing",
+            "link": "#",
+            "text_alignment": "center center"
+          }
+        },
+        "template--16296339308699__bbeff370-6694-4003-a68b-b46d229eccd5-image-4": {
+          "type": "image",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/sea-fishing-the-big-blue.jpg",
+            "alignment": "center center",
+            "enlarge_image": true,
+            "subheading": "on an adventure",
+            "title": "outdoors",
+            "description": "<p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.<\/p>",
+            "button_label": "shop outdoor",
+            "link": "#",
+            "text_alignment": "center center"
+          }
+        }
+      },
+      "block_order": [
+        "template--16296339308699__bbeff370-6694-4003-a68b-b46d229eccd5-image-3",
+        "template--16296339308699__bbeff370-6694-4003-a68b-b46d229eccd5-image-4"
+      ],
+      "settings": {
+        "grid": 2,
+        "height": "fixed",
+        "desktop_image_height": 580,
+        "mobile_image_height": 400,
+        "title_size": 66,
+        "title_size_mobile": 20,
+        "enable_margin": true,
+        "enable_row_spacing": false,
+        "full_width": false,
+        "use_alt_bg": false,
+        "enable_carousel": true,
+        "overlay_style": "full",
+        "button_style": "primary"
+      }
+    },
+    "dbee3d59-f22c-46b2-a6e9-7cc8145da56f": {
+      "type": "icon-with-text",
+      "blocks": {
+        "c870a2c0-4bef-49e1-a250-3ed51b1b15d9": {
+          "type": "icon",
+          "settings": {
+            "icon": "<svg width=\"21\" height=\"20\" viewbox=\"0 0 21 20\" fill=\"none\" xmlns=\"http:\/\/www.w3.org\/2000\/svg\">\n<g clip-path=\"url(#clip0_7286_142)\">\n<path d=\"M20.2538 5.32429L15.935 0H4.81874L0.5 5.32429V20H20.2554L20.2538 5.32429ZM18.5455 4.96661H10.9451V1.10343H15.3987L18.5455 4.96661ZM5.35361 1.10343H9.80729V4.96661H2.2068L5.35361 1.10343ZM1.60376 18.8955V6.03711H19.1486V18.8955H1.60376Z\" fill=\"white\"><\/path>\n<path d=\"M11.3784 12.3693L11.8318 11.9224H9.21759C8.86903 11.9224 8.55589 11.9573 8.31079 12.1291C7.82337 12.4727 7.71852 13.023 7.85739 13.4001C7.96222 13.8121 8.27537 14.2591 8.90305 14.294C9.42589 14.3289 9.94872 14.3289 10.507 14.3289H11.3089H11.6929C12.0414 14.3289 12.2852 14.604 12.2852 14.9127C12.2838 15.2214 12.006 15.4616 11.6915 15.4616H11.3076H10.541H10.4716H9.73906C9.4259 15.4616 9.14679 15.4616 8.83226 15.4267C7.822 15.3583 6.98463 14.6711 6.74092 13.6739C6.46181 12.678 6.84576 11.6808 7.71716 11.097C8.23999 10.7534 8.79824 10.6849 9.28566 10.6849H11.8998L11.3416 10.238C11.2367 10.1347 11.1673 9.96286 11.1673 9.82597C11.1673 9.68907 11.2367 9.51727 11.3416 9.41394C11.4478 9.31193 11.6221 9.27704 11.7609 9.27704C11.8998 9.27704 12.0741 9.34549 12.1789 9.44883L13.678 10.9265C13.7828 11.0299 13.8523 11.2017 13.8169 11.3386C13.8169 11.4755 13.7474 11.6473 13.6426 11.7506L12.2129 13.2283C12.1081 13.3317 11.9338 13.4001 11.795 13.4001C11.6207 13.4001 11.4818 13.3317 11.377 13.2283C11.2721 13.125 11.2027 12.9532 11.2027 12.8163C11.1687 12.6445 11.2381 12.4727 11.3784 12.3693Z\" fill=\"white\"><\/path>\n<\/g>\n<defs>\n<clippath id=\"clip0_7286_142\">\n<rect width=\"20\" height=\"20\" fill=\"white\" transform=\"translate(0.5)\"><\/rect>\n<\/clippath>\n<\/defs>\n<\/svg>",
+            "label": "28 day returns"
+          }
+        },
+        "9e40639a-484c-40e8-9cae-09578ad2f193": {
+          "type": "icon",
+          "settings": {
+            "icon": "<svg width=\"21\" height=\"20\" viewbox=\"0 0 21 20\" fill=\"none\" xmlns=\"http:\/\/www.w3.org\/2000\/svg\">\n<g clip-path=\"url(#clip0_7286_148)\">\n<path d=\"M19.175 6.17232C19.075 5.8975 18.8036 5.71429 18.5 5.71429H14.0714V3.67857C14.0714 3.30536 13.75 3 13.3571 3H1.21429C0.821429 3 0.5 3.30536 0.5 3.67857V13.5179C0.5 13.8911 0.821429 14.1964 1.21429 14.1964H2.59643C2.47857 14.4068 2.38929 14.6341 2.33929 14.875H1.21429C0.821429 14.875 0.5 15.1804 0.5 15.5536C0.5 15.9268 0.821429 16.2321 1.21429 16.2321H2.44286C2.81071 17.2195 3.8 17.9286 4.96429 17.9286C6.12857 17.9286 7.11786 17.2195 7.48571 16.2321H13.8714C14.2393 17.2195 15.2286 17.9286 16.3929 17.9286C17.8714 17.9286 19.0714 16.7886 19.0714 15.3839C19.0714 14.9564 18.9571 14.5527 18.7607 14.1964H19.7857C20.1786 14.1964 20.5 13.8911 20.5 13.5179V9.95536C20.5 9.88071 20.4857 9.80607 20.4607 9.73482L19.175 6.17232ZM4.96429 16.5714C4.275 16.5714 3.71429 16.0388 3.71429 15.3839C3.71429 14.7291 4.275 14.1964 4.96429 14.1964C5.65357 14.1964 6.21429 14.7291 6.21429 15.3839C6.21429 16.0388 5.65357 16.5714 4.96429 16.5714ZM1.92857 12.8393V4.35714H12.6429V6.39286V12.8393H1.92857ZM13.7679 14.875H7.58929C7.53929 14.6341 7.45 14.4068 7.33214 14.1964H13.3571H14.025C13.9071 14.4068 13.8214 14.6341 13.7679 14.875ZM16.3929 16.5714C15.7036 16.5714 15.1429 16.0388 15.1429 15.3839C15.1429 14.7291 15.7036 14.1964 16.3929 14.1964C17.0821 14.1964 17.6429 14.7291 17.6429 15.3839C17.6429 16.0388 17.0821 16.5714 16.3929 16.5714ZM19.0714 12.8393H14.0714V7.07143H17.9893L19.0714 10.0673V12.8393Z\" fill=\"white\"><\/path>\n<path d=\"M16.9281 8.08929H15.4996C15.1067 8.08929 14.7853 8.39465 14.7853 8.76787C14.7853 9.14108 15.1067 9.44644 15.4996 9.44644H16.9281C17.321 9.44644 17.6424 9.14108 17.6424 8.76787C17.6424 8.39465 17.321 8.08929 16.9281 8.08929Z\" fill=\"white\"><\/path>\n<\/g>\n<defs>\n<clippath id=\"clip0_7286_148\">\n<rect width=\"20\" height=\"20\" fill=\"white\" transform=\"translate(0.5)\"><\/rect>\n<\/clippath>\n<\/defs>\n<\/svg>",
+            "label": "free delivery on orders over €40"
+          }
+        },
+        "fb04570f-6d72-4441-a9eb-6501dff1775a": {
+          "type": "icon",
+          "settings": {
+            "icon": "<svg width=\"21\" height=\"20\" viewbox=\"0 0 21 20\" fill=\"none\" xmlns=\"http:\/\/www.w3.org\/2000\/svg\">\n<g clip-path=\"url(#clip0_7286_154)\">\n<path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M10.9647 20.0712C13.5707 17.1131 18.5 11.5496 18.5 7.46468C18.5 3.37979 15.1192 0 10.9647 0C6.87979 0 3.5 3.38079 3.5 7.46468C3.5 11.5496 8.42989 17.1129 10.9647 20.0712ZM10.9647 4.36629C12.7256 4.36629 14.1337 5.7744 14.1337 7.46488C14.1337 9.2258 12.7256 10.6339 10.9647 10.6339C9.2743 10.6339 7.86609 9.2258 7.86609 7.46488C7.86609 5.7745 9.2742 4.36629 10.9647 4.36629Z\" fill=\"white\"><\/path>\n<\/g>\n<defs>\n<clippath id=\"clip0_7286_154\">\n<rect width=\"20\" height=\"20\" fill=\"white\" transform=\"translate(0.5)\"><\/rect>\n<\/clippath>\n<\/defs>\n<\/svg>",
+            "label": "In Business Since 1977"
+          }
+        }
+      },
+      "block_order": [
+        "c870a2c0-4bef-49e1-a250-3ed51b1b15d9",
+        "9e40639a-484c-40e8-9cae-09578ad2f193",
+        "fb04570f-6d72-4441-a9eb-6501dff1775a"
+      ],
+      "settings": {
+        "back_color": "#004289"
+      }
+    },
+    "b72adc3d-ea74-4d56-91d1-c41989d71e50": {
+      "type": "collage",
+      "blocks": {
+        "982c8a46-c5fb-42a9-b4e1-c86c73523bf8": {
+          "type": "collage",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/hiking-essentials.png",
+            "heading": "Hiking Essentials",
+            "description": "<p>Nullan quis risus eget urna mollis ornare vel eu leo.<\/p>",
+            "btn_link": "",
+            "btn_text": "shop hiking",
+            "large_image": false
+          }
+        },
+        "2f4d615f-9513-404c-a7cc-cea9298a9120": {
+          "type": "collage",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/accessories.png",
+            "heading": "Accessories",
+            "description": "<p>Curabitur blandit tempus porttitor. Maecenas faucibus mollis.<\/p>",
+            "btn_link": "#",
+            "btn_text": "shop accessories",
+            "large_image": false
+          }
+        },
+        "29fb11c2-6aed-4991-b9d5-4a276b1511bc": {
+          "type": "collage",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/a-bridge-sitting-in-thick-pink-and-purple-fog.jpg",
+            "heading": "outdoor essentials",
+            "description": "<p>Curabitur blandit tempus porttitor. Maecenas faucibus mollis.<\/p>",
+            "btn_link": "#",
+            "btn_text": "shop outdoor essentials",
+            "large_image": true
+          }
+        }
+      },
+      "block_order": [
+        "982c8a46-c5fb-42a9-b4e1-c86c73523bf8",
+        "2f4d615f-9513-404c-a7cc-cea9298a9120",
+        "29fb11c2-6aed-4991-b9d5-4a276b1511bc"
+      ],
+      "settings": {}
+    },
+    "cc9631bd-a53c-4202-929f-283b7cb2a0f1": {
+      "type": "featured-collection",
+      "settings": {
+        "title": "Our Favourites",
+        "collection": "clothing",
+        "show_vendor": true,
+        "enable_carousel": true,
+        "grid": 4,
+        "rows": 1,
+        "use_alt_bg": true,
+        "show_view_all": false,
+        "full_width": true
+      }
+    }
+  },
+  "order": [
+    "bbeff370-6694-4003-a68b-b46d229eccd5",
+    "dbee3d59-f22c-46b2-a6e9-7cc8145da56f",
+    "b72adc3d-ea74-4d56-91d1-c41989d71e50",
+    "cc9631bd-a53c-4202-929f-283b7cb2a0f1"
+  ]
+}

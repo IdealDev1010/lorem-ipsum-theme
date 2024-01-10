@@ -1,0 +1,169 @@
+<div data-section-type="list-collections-template">
+  {% if section.settings.title != blank %}
+    <div class="container" data-cc-animate>
+      <div class="page-header cf">
+        <h1 class="majortitle">{{ section.settings.title | escape }}</h1>
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="container{% if settings.use_fullwidth_layout %} container--no-max{% endif %}">
+
+    {% if section.settings.display_type == 'all' %}
+
+    {% assign paginate_amount = section.settings.grid | times: 6 %}
+      {% paginate collections by paginate_amount %}
+        <div class="collection-listing overlay-mode-{{ section.settings.overlay_mode }}">
+          <div class="product-list product-list--per-row-{{ section.settings.grid }} product-list--per-row-mob-2 product-list--image-shape-{{ settings.coll_grid_image_shape }}">
+            {%- liquid
+              if settings.coll_grid_image_shape == 'portrait-23'
+                assign chosen_aspect_ratio = 0.67
+              elsif settings.coll_grid_image_shape == 'portrait-45'
+                assign chosen_aspect_ratio = 0.8
+              elsif settings.coll_grid_image_shape == 'square'
+                assign chosen_aspect_ratio = 1.0
+              elsif settings.coll_grid_image_shape == 'landscape-54'
+                assign chosen_aspect_ratio = 1.25
+              elsif settings.coll_grid_image_shape == 'landscape-32'
+                assign chosen_aspect_ratio = 1.50
+              elsif settings.coll_grid_image_shape == 'tallest'
+                assign chosen_aspect_ratio = 99
+                for collection in collections
+                  if collection.featured_image.aspect_ratio < chosen_aspect_ratio
+                    assign chosen_aspect_ratio = collection.featured_image.aspect_ratio
+                  endif
+                endfor
+              else
+                assign chosen_aspect_ratio = 0
+                for collection in collections
+                  if collection.featured_image.aspect_ratio > chosen_aspect_ratio
+                    assign chosen_aspect_ratio = collection.featured_image.aspect_ratio
+                  endif
+                endfor
+              endif
+            -%}
+            {% for collection in collections %}
+              {% render 'collection-block', collection: collection, custom_aspect_ratio: chosen_aspect_ratio, animate: true %}
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="pagination-row" data-cc-animate>{% render 'pagination-control', paginate: paginate %}</div>
+      {% endpaginate %}
+
+    {% else %}
+
+      <div class="collection-listing overlay-mode-{{ section.settings.overlay_mode }}">
+        <div class="product-list product-list--per-row-{{ section.settings.grid }} product-list--per-row-mob-2 product-list--image-shape-{{ settings.coll_grid_image_shape }}">
+          {%- liquid
+            if settings.coll_grid_image_shape == 'portrait-23'
+              assign chosen_aspect_ratio = 0.67
+            elsif settings.coll_grid_image_shape == 'portrait-45'
+              assign chosen_aspect_ratio = 0.8
+            elsif settings.coll_grid_image_shape == 'square'
+              assign chosen_aspect_ratio = 1.0
+            elsif settings.coll_grid_image_shape == 'landscape-54'
+              assign chosen_aspect_ratio = 1.25
+            elsif settings.coll_grid_image_shape == 'landscape-32'
+              assign chosen_aspect_ratio = 1.50
+            elsif settings.coll_grid_image_shape == 'tallest'
+              assign chosen_aspect_ratio = 99
+              for block in section.blocks
+                assign collection = collections[block.settings.collection]
+                if collection != blank
+                  assign collection_image = block.settings.image | default: collection.featured_image
+                  if collection_image.aspect_ratio < chosen_aspect_ratio
+                    assign chosen_aspect_ratio = collection_image.aspect_ratio
+                  endif
+                endif
+              endfor
+            else
+              assign chosen_aspect_ratio = 0
+              for block in section.blocks
+                assign collection = collections[block.settings.collection]
+                if collection != blank
+                  assign collection_image = block.settings.image | default: collection.featured_image
+                  if collection_image.aspect_ratio > chosen_aspect_ratio
+                    assign chosen_aspect_ratio = collection_image.aspect_ratio
+                  endif
+                endif
+              endfor
+            endif
+          -%}
+          {% for block in section.blocks %}
+            {%- assign collection = collections[block.settings.collection] -%}
+            {% if collection != blank %}
+              {% render 'collection-block', collection: collection, custom_image: block.settings.image, custom_aspect_ratio: chosen_aspect_ratio, animate: true %}
+            {% else %}
+              {% render 'onboarding-collection-block', forloop: forloop %}
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+
+    {% endif %}
+  </div>
+</div>
+
+
+{% schema %}
+  {
+    "name": "All collections",
+    "class": "page-section-spacing",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Our collections"
+      },
+      {
+        "type": "paragraph",
+        "content": "All of your collections are listed by default. To customize your list, choose 'Selected' and add collections."
+      },
+      {
+        "type": "radio",
+        "id": "display_type",
+        "label": "Select collections to show",
+        "default": "all",
+        "options": [
+          {
+            "value": "all",
+            "label": "All"
+          },
+          {
+            "value": "selected",
+            "label": "Selected"
+          }
+        ]
+      },
+      {
+        "type": "range",
+        "id": "grid",
+        "label": "Collections per row",
+        "min": 2,
+        "max": 5,
+        "step": 1,
+        "default": 4
+      }
+    ],
+    "blocks": [
+      {
+        "type": "image",
+        "name": "Collection",
+        "settings": [
+          {
+            "type": "collection",
+            "id": "collection",
+            "label": "Collection"
+          },
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

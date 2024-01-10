@@ -1,0 +1,33 @@
+<div class="custom-page">
+  <div class="page-content">
+    <div class="container cf" data-cc-animate>
+      <div class="rte">
+        {{ page.content }}
+      </div>
+    </div>
+  </div>
+  <div class="page-sidebar">
+    <div class="container cf" data-cc-animate>
+      <h2 class="page-sidebar__title">Sidebar</h2>
+      <ul class="page-sidebar__menu">
+        {% for link in section.settings.links.links %}
+          <li class="page-sidebar__menu-item">
+            <a class="page-sidebar__menu-link {% if link.active %}active{% endif %}" href="{{ link.link }}">{{ link.title }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+{% schema %}
+  {
+    "name": "Custom Page",
+    "settings": [
+      {
+        "type": "link_list",
+        "id": "links",
+        "label": "Sidebar Menu"
+      }
+    ]
+  }
+{% endschema %}

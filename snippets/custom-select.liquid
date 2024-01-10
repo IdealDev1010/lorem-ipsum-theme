@@ -1,0 +1,94 @@
+{% comment %}
+  Parameters:
+  - id {string} [required] - A unique id.
+  - option_values {Array} [required] - Option values.
+  - option_names {Array} [optional] - Option names. If not supplied, values will be used.
+  - selected_value {string} [optional] - The value of the selected option
+  - label {string} [optional] - Label text. If not supplied, a label must be rendered separately with
+      an id that matches the 'id' parameter.
+  - label_inside {boolean} [optional] - Whether the label should be inside the select box. Default is false.
+  - hide_label [optional] - Whether to visually hide the label. Default is false.
+  - swatches {boolean} [optional] - Whether the select element is a colour selector with swatches enabled. Default is false.
+  - include_native {boolean} [optional] - Whether a native select element should be included (hidden). Default is false.
+  - native_name {string} [optional] - A unique name for the native select element (if included).
+  - native_form_id {string} [optional] - Associated form for the native select element.
+  - blank_option {string} [optional] - Include a blank option before other options, using the string provided as the name.
+
+  Example usage:
+  render 'custom-select',
+    id: 'colour-selector',
+    option_values: ['Blue', 'Green', 'Red'],
+    selected_value: 'Red',
+    label: 'Colour',
+    swatches: true
+{% endcomment %}
+
+{%- liquid
+  assign label_id = id | append: '-label'
+
+  if option_names == blank
+    assign option_names = option_values
+  endif
+
+  if blank_option != blank and selected_value == ''
+    assign selected_id = id | append: '-opt-blank'
+    assign selected_name = blank_option
+  elsif selected_value
+    for value in option_values
+      if value == selected_value
+        assign selected_id = id | append: '-opt' | append: forloop.index0
+        assign selected_name = option_names[forloop.index0]
+      endif
+    endfor
+  endif
+-%}
+
+{%- if label -%}
+  {%- capture label_html -%}
+    <label id="{{ label_id }}" class="label{% if hide_label %} visually-hidden{% endif %} no-js-hidden">{{ label | escape_once }}</label>
+  {%- endcapture -%}
+  {%- unless label_inside -%}{{ label_html }}{%- endunless -%}
+{%- endif -%}
+<div class="cc-select{% if label_inside %} cc-select--label-inside{% endif %} no-js-hidden" id="{{ id }}">
+  {%- if label and label_inside -%}{{ label_html }}{%- endif -%}
+  <button class="cc-select__btn" type="button"
+          aria-haspopup="listbox" aria-labelledby="{{ label_id }}"
+          {% if swatches and selected_value != blank %} data-swatch="{{ selected_value | replace: '"', '' | downcase }}"{% endif %}>
+    {{- selected_name | escape_once -}}
+    <svg class="cc-select__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+  </button>
+  <ul class="cc-select__listbox" role="listbox" tabindex="-1"
+      aria-hidden="true"{% if selected_value %} aria-activedescendant="{{ selected_id }}"{% endif %}>
+    {%- if blank_option != blank -%}
+      <li class="cc-select__option js-option" id="{{ id }}-opt-blank" role="option"
+          data-value=""
+          {% if selected_value == blank %} aria-selected="true"{% endif %}>
+        <span>{{- blank_option | escape_once -}}</span>
+      </li>
+    {%- endif -%}
+    {%- for value in option_values -%}
+      <li class="cc-select__option js-option" id="{{ id }}-opt-{{ forloop.index0 }}" role="option"
+          data-value="{{ value | escape }}"
+          {% if swatches %} data-swatch="{{ value | replace: '"', '' | downcase }}"{% endif %}
+          {% if value == selected_value %} aria-selected="true"{% endif %}>
+        <span>{{- option_names[forloop.index0] | escape_once -}}</span>
+      </li>
+    {%- endfor -%}
+  </ul>
+</div>
+
+{%- if include_native -%}
+  {%- if label -%}
+    <label for="{{ id }}-native" class="label{% if hide_label %} visually-hidden{% endif %} js-hidden">{{ label | escape_once }}</label>
+  {%- endif -%}
+  <select class="js-hidden" id="{{ id }}-native"{% if native_name %} name="{{ native_name }}"{% endif %}{% if native_form_id %} form="{{ native_form_id }}"{% endif %}>
+    {%- if blank_option != blank -%}
+      <option value="">{{ blank_option | escape_once }}</option>
+    {%- endif -%}
+    {%- for value in option_values -%}
+      <option value="{{ value | escape }}"{% if value == selected_value %} selected{% endif %}>
+        {{- option_names[forloop.index0] | escape_once -}}
+      </option>
+    {%- endfor -%}
+  </select>
+{%- endif -%}

@@ -1,0 +1,141 @@
+
+<div id="section-id-{{ section.id }}" data-section-type="store-messages" data-cc-animate>
+  {% style %}
+    #section-id-{{ section.id }} {
+      --background: {{ section.settings.head_not_col_bg }};
+      --text-1: {{ section.settings.head_not_col_txt1 }};
+      --text-2: {{ section.settings.head_not_col_txt2 }};
+    }
+  {% endstyle %}
+  <div class="store-messages messages-{{ section.blocks.size }} desktop-only">
+    <div class="container cf">
+      {%- for block in section.blocks -%}
+        <div class="message message-{{ forloop.index }}" data-cc-animate data-cc-animate-delay="{{ forloop.index | times: 0.15 }}s">
+          {% if block.settings.link_url != blank %}
+          <a href="{{ block.settings.link_url }}">
+            {% endif %}
+
+            {% if block.settings.heading != blank %}
+              <h6 class="title">{{ block.settings.heading | escape }}</h6>
+            {% endif %}
+            {% if block.settings.subheading != blank %}
+              <span class="tagline">{{ block.settings.subheading | escape }}</span>
+            {% endif %}
+
+            {% if block.settings.link_url != blank %}
+          </a>
+          {% endif %}
+
+          {% unless forloop.first %}<div class="fluff"></div>{% endunless %}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+
+  {%- if section.settings.head_not_mob_show -%}
+    <div class="store-messages-mobile mobile-only">
+      <div class="container">
+        {%- if section.settings.head_not_mob_url != blank -%}
+          <a href="{{ section.settings.head_not_mob_url }}">
+        {%- endif -%}
+        <span>{{ section.settings.head_not_mob_text | escape }}</span>
+        {%- if section.settings.head_not_mob_url != blank -%}
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+  {
+    "name": "Store messages",
+    "class": "section-compact-messages",
+    "max_blocks": 3,
+    "settings": [
+      {
+        "type": "header",
+        "content": "Colors"
+      },
+      {
+        "type": "color",
+        "id": "head_not_col_bg",
+        "label": "Background",
+        "default": "#f4f6f8"
+      },
+      {
+        "type": "color",
+        "id": "head_not_col_txt1",
+        "label": "Text line 1",
+        "default": "#171717"
+      },
+      {
+        "type": "color",
+        "id": "head_not_col_txt2",
+        "label": "Text line 2",
+        "default": "#4c4c4b"
+      },
+      {
+        "type": "header",
+        "content": "Mobile message"
+      },
+      {
+        "type": "checkbox",
+        "id": "head_not_mob_show",
+        "label": "Enable",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "head_not_mob_text",
+        "label": "Text",
+        "default": "Add important information here"
+      },
+      {
+        "type": "url",
+        "id": "head_not_mob_url",
+        "label": "Link URL"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "message",
+        "name": "Message",
+        "settings": [
+          {
+            "type": "text",
+            "id": "heading",
+            "label": "Heading",
+            "default": "Message"
+          },
+          {
+            "type": "text",
+            "id": "subheading",
+            "label": "Subheading",
+            "default": "Add important information here"
+          },
+          {
+            "type": "url",
+            "id": "link_url",
+            "label": "Link URL"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Store messages",
+        "settings": {
+        },
+        "blocks": [
+          {
+            "type": "message"
+          },
+          {
+            "type": "message"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

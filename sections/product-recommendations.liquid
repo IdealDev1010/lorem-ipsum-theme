@@ -1,0 +1,113 @@
+<div class="product-recommendations"
+    data-section-id="{{ section.id }}"
+    data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&limit={{ section.settings.grid }}&product_id={{ product.id }}"
+    data-components="accordion,modal"
+    data-cc-animate>
+
+  {% if recommendations.performed and recommendations.products_count > 0 %}
+    <div class="container{% if settings.use_fullwidth_layout %} container--no-max{% endif %} fully-spaced-row">
+      <h4 class="align-center hometitle">{{ section.settings.title }}</h4>
+
+      <div class="collection-listing related-collection">
+        <div class="product-list product-list--per-row-{{ section.settings.grid }} product-list--per-row-mob-{{ settings.prod_thumb_mob_per_row }} product-list--image-shape-{{ settings.prod_thumb_shape }}">
+          {%- liquid
+            if settings.prod_thumb_shape == 'portrait-23'
+              assign chosen_aspect_ratio = 0.67
+            elsif settings.prod_thumb_shape == 'portrait-45'
+              assign chosen_aspect_ratio = 0.8
+            elsif settings.prod_thumb_shape == 'square'
+              assign chosen_aspect_ratio = 1.0
+            elsif settings.prod_thumb_shape == 'landscape-54'
+              assign chosen_aspect_ratio = 1.25
+            elsif settings.prod_thumb_shape == 'landscape-32'
+              assign chosen_aspect_ratio = 1.50
+            elsif settings.prod_thumb_shape == 'tallest'
+              assign chosen_aspect_ratio = 99
+              for product in recommendations.products
+                if product.featured_media.preview_image.aspect_ratio < chosen_aspect_ratio
+                  assign chosen_aspect_ratio = product.featured_media.preview_image.aspect_ratio
+                endif
+              endfor
+            else
+              assign chosen_aspect_ratio = 0
+              for product in recommendations.products
+                if product.featured_media.preview_image.aspect_ratio > chosen_aspect_ratio
+                  assign chosen_aspect_ratio = product.featured_media.preview_image.aspect_ratio
+                endif
+              endfor
+            endif
+          -%}
+          {%- for product in recommendations.products -%}
+            {% render 'product-block', product: product, custom_aspect_ratio: chosen_aspect_ratio %}
+          {%- endfor -%}
+        </div>
+      </div>
+
+    </div>
+  {% endif %}
+</div>
+
+
+{% javascript %}
+var loadProductRecommendationsIntoSection = function() {
+  // Look for an element with class 'product-recommendations'
+  var productRecommendationsSection = document.querySelector(".product-recommendations");
+  if (productRecommendationsSection === null) { return; }
+  // Create request and submit it using Ajax
+  var request = new XMLHttpRequest();
+  request.open("GET", productRecommendationsSection.dataset.url);
+  request.onload = function() {
+    if (request.status >= 200 && request.status < 300) {
+      var container = document.createElement("div");
+      container.innerHTML = request.response;
+      productRecommendationsSection.innerHTML = container.querySelector(".product-recommendations").innerHTML;
+      theme.ProductBlockManager.loadImages(productRecommendationsSection);
+      theme.initAnimateOnScroll();
+    }
+  };
+  request.send();
+};
+// fetch when section reloads in editor
+document.addEventListener("shopify:section:load", function(event) {
+  if (document.querySelector('[data-section-id="' + event.detail.sectionId + '"].product-recommendations')) {
+    loadProductRecommendationsIntoSection();
+  }
+});
+// Fetching the recommendations on page load
+loadProductRecommendationsIntoSection();
+{% endjavascript %}
+
+
+{% schema %}
+  {
+    "name": "Product recommendations",
+    "class": "section-product-recommendations",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Dynamic recommendations use order and product information to change and improve over time. [Learn more](https://help.shopify.com/en/themes/development/recommended-products)"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "You may also like"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_vendor",
+        "label": "Show product vendor",
+        "default": false
+      },
+      {
+        "type": "range",
+        "id": "grid",
+        "label": "Maximum products to show",
+        "min": 2,
+        "max": 5,
+        "step": 1,
+        "default": 4
+      }
+    ]
+  }
+{% endschema %}

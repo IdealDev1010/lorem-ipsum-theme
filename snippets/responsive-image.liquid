@@ -1,0 +1,36 @@
+{%- liquid
+  if aspect_ratio != blank
+    assign local_aspect_ratio = aspect_ratio
+  else
+    assign local_aspect_ratio = image.aspect_ratio
+  endif
+
+  assign local_cover = cover | default: false
+
+  if max_height
+    assign max_width = max_height | times: image.aspect_ratio | at_most: image.width | round
+  else
+    assign max_width = image.width
+  endif
+
+  assign min_aspect_ratio = min_aspect_ratio | default: 0
+  assign local_aspect_ratio = local_aspect_ratio | at_least: min_aspect_ratio
+-%}
+
+<div class="rimage-outer-wrapper" {% unless local_cover or no_max_width %}style="max-width: {{ max_width }}px"{% endunless %}>
+  <div class="rimage-wrapper lazyload--placeholder" style="padding-top:{{ 1 | divided_by: local_aspect_ratio | times: 100 }}%"
+       {% if animate %}data-cc-animate="{% if animate_type %}{{ animate_type }}{% endif %}" {% if animate_delay %}data-cc-animate-delay="{{ animate_delay }}"{% endif %}{% endif %}>
+    {%- assign img_url = image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+    <img class="rimage__image lazyload{% if manual_image_load %}--manual{% endif %} fade-in {% if local_cover %}cover{% endif %}"
+      data-src="{{ img_url }}"
+      data-widths="[180, 220, 300, 360, 460, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+      data-aspectratio="{{ image.aspect_ratio }}"
+      data-sizes="auto"
+      alt="{{ image.alt | escape }}"
+      {% if local_cover %}data-parent-fit="cover"{% endif %}>
+
+    <noscript>
+      <img class="rimage__image" src="{{ image | img_url: '1024x1024' }}" alt="{{ image.alt | escape }}">
+    </noscript>
+  </div>
+</div>

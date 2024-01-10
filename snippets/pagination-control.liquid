@@ -1,0 +1,23 @@
+{% if paginate.pages > 1 %}
+  <div class="pagination">
+    {% if paginate.previous %}
+      <a class="prev" href="{{ paginate.previous.url }}">&laquo; {{ 'general.pagination.previous' | t }}</a>
+      <span class="pagination__sep">&middot;</span>
+    {% endif %}
+
+    {% for part in paginate.parts %}
+      <span class="pagination__number {% if paginate.current_page == part.title %}active{% endif %}">
+        {% if part.is_link %}
+          {{ part.title | link_to: part.url }}
+        {% else %}
+          {{ part.title }}
+        {% endif %}
+      </span>
+    {% endfor %}
+
+    {% if paginate.next %}
+      <span class="pagination__sep">&middot;</span>
+      <a class="next" href="{{ paginate.next.url }}">{{ 'general.pagination.next' | t }} &raquo;</a>
+    {% endif %}
+  </div>
+{% endif %}

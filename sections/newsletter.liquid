@@ -1,0 +1,106 @@
+<div id="section-id-{{ section.id }}" class="section-signup">
+  {%- assign brightness = section.settings.color_bg | color_brightness -%}
+  {%- assign alpha = section.settings.color_bg | color_extract: 'alpha' -%}
+  <style type="text/css">
+    #section-id-{{ section.id }} {
+      {% if section.settings.back_img != blank %}
+        background-image: url({{ section.settings.back_img | img_url: 'master' }});
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      {% else %}
+        background: {{ section.settings.color_bg }};
+      {% endif %}
+    }
+    {% if brightness < 190 and alpha > 0 %}
+    #section-id-{{ section.id }},
+    #section-id-{{ section.id }} .hometitle,
+    #section-id-{{ section.id }} a {
+      color: #fff;
+    }
+    {% endif %}
+  </style>
+  <div class="container strongly-padded-row align-center" data-cc-animate data-cc-animate-delay="0.3s">
+
+    <div class="newsletter-wrapper">
+      <h2 class="hometitle h4-style in-content">{{ section.settings.title | escape }}</h2>
+
+      <div class="rte lightly-spaced-row">{{ section.settings.subheading }}</div>
+
+      <div class="signup-form">
+        {% form 'customer', id: 'home_newsletter_signup' %}
+          {% if form.posted_successfully? %}
+            <div class="signup-form__response signup-form__response--success">
+              <h4>{{ 'layout.signup.post_success' | t }}</h4>
+            </div>
+          {% else %}
+            {% if form.errors %}
+              <div class="signup-form__response signup-form__response--error">
+                {% for field in form.errors %}
+                  <p class="error">{{ field | capitalize }} - {{ form.errors.messages[field] }}</p>
+                {% endfor %}
+              </div>
+            {% endif %}
+            <input type="hidden" name="contact[tags]" value="prospect,newsletter"/>
+            <label for="newsletter-email">Email Address</label>
+            <div class="signup-form__inline-container">
+              <input type="email"
+                placeholder=""
+                id="newsletter-email"
+                class="signup-form__email"
+                value=""
+                name="contact[email]"
+                aria-label="{{ 'layout.signup.input_label' | t | escape }}"
+                required />
+              <button class="button signup-form__button" type="submit">
+                {{- 'layout.signup.submit' | t -}}
+              </button>
+            </div>
+          {% endif %}
+        {% endform %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Newsletter",
+    "class": "section-newsletter",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Subscribe to our newsletter"
+      },
+	    {
+        "type": "richtext",
+        "id": "subheading",
+        "label": "Subheading",
+        "default": "<p>Promotions, new products and sales. Directly to your inbox.</p>"
+      },
+      {
+        "type": "color",
+        "id": "color_bg",
+        "label": "Background color",
+        "default": "#ffffff"
+      },
+      {
+        "type": "image_picker",
+        "id": "back_img",
+        "label": "Background Image"
+      },
+      {
+        "type": "paragraph",
+        "content": "Customers who subscribe will have their email address added to the “accepts marketing” [customer list](/admin/customers?query=&accepts_marketing=1)"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Newsletter",
+        "settings": {}
+      }
+    ]
+  }
+{% endschema %}

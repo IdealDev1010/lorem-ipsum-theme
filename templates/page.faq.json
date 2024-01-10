@@ -1,0 +1,126 @@
+{
+  "sections": {
+    "heading": {
+      "type": "image-with-text-overlay",
+      "settings": {
+        "height": "fixed",
+        "height_desktop": 400,
+        "height_mobile": 300,
+        "subheading": "",
+        "title": "Customer Help",
+        "title_size": 52,
+        "text": "<p>If talking to a real-life human is more your thing, you can reach our Customer Happiness Team via email (below).<\/p>",
+        "button_label_1": "",
+        "button_label_2": ""
+      }
+    },
+    "main": {
+      "type": "faq-header",
+      "settings": {}
+    },
+    "faq-content-1": {
+      "type": "collapsible-tabs",
+      "blocks": {
+        "question-1": {
+          "type": "question",
+          "settings": {
+            "title": "What size should I buy?",
+            "answer": "<p>If you’re not quite sure which size is right for you, refer to our size guides. They’re located underneath the available sizes for each of our products.<\/p>"
+          }
+        },
+        "question-2": {
+          "type": "question",
+          "settings": {
+            "title": "Can I cancel my order?",
+            "answer": "<p>We completely get it, we change our minds too! While we wish could, once an order is placed, we are unable to alter or cancel it at this time. We hope to have a cancellation window one day in the future.<\/p><p>Should the item(s) not work out, make sure to exchange for a preferred style or return for a refund. As a reminder, domestic return shipping is free.<\/p>"
+          }
+        }
+      },
+      "block_order": [
+        "question-1",
+        "question-2"
+      ],
+      "settings": {
+        "title": "Ordering"
+      }
+    },
+    "faq-content-2": {
+      "type": "collapsible-tabs",
+      "blocks": {
+        "para-1": {
+          "type": "content",
+          "settings": {
+            "content": "<p>We use all major carriers, and local courier partners. You’ll be asked to select a delivery method during checkout.<\/p>"
+          }
+        },
+        "question-1": {
+          "type": "question",
+          "settings": {
+            "title": "What is the shipping policy?",
+            "answer": "<p>Once your order is placed, you will receive a confirmation email letting you know that our fulfillment team has received your order. Once your order is fulfilled, you will receive an email notification with your tracking information. Shipping fees are non-refundable in the case of returns.<\/p>"
+          }
+        },
+        "question-2": {
+          "type": "question",
+          "settings": {
+            "title": "Do you ship overseas?",
+            "answer": "<p>Yes, we ship all over the world. Shipping costs will apply, and will be added at checkout.<\/p>"
+          }
+        }
+      },
+      "block_order": [
+        "para-1",
+        "question-1",
+        "question-2"
+      ],
+      "settings": {
+        "title": "Shipping, Returns & Exchanges"
+      }
+    },
+    "contact": {
+      "type": "rich-text",
+      "blocks": {
+        "icon": {
+          "type": "icon",
+          "settings": {
+            "icon": "chat_bubble"
+          }
+        },
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "title": "Get in touch"
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Have questions about your order, or a general enquiry?<\/p>"
+          }
+        },
+        "button": {
+          "type": "button",
+          "settings": {
+            "button_label": "Contact us"
+          }
+        }
+      },
+      "block_order": [
+        "icon",
+        "heading",
+        "text",
+        "button"
+      ],
+      "settings": {
+        "use_alt_bg": true
+      }
+    }
+  },
+  "order": [
+    "heading",
+    "main",
+    "faq-content-1",
+    "faq-content-2",
+    "contact"
+  ]
+}
