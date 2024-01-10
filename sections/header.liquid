@@ -51,7 +51,7 @@
 {%- assign featured_links = section.settings.nav_featured_link | split: ', ' -%}
 <div data-section-type="header" data-cc-animate>
   <div id="pageheader" class="pageheader pageheader--layout-{{ section.settings.menu_layout }}{% if section.settings.enable_transparent and template.name == 'index' %} pageheader--transparent-permitted pageheader--transparent{% endif %}{% if section.settings.enable_sticky %} pageheader--sticky{% endif %}">
-    <div class="logo-area container container--no-max">
+    <div class="logo-area container">
       <div class="logo-area__left">
         <div class="logo-area__left__inner">
           <button class="button notabutton mobile-nav-toggle" aria-label="{{ 'general.navigation.menu_toggle_aria_label' | t | escape }}" aria-controls="main-nav">

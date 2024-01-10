@@ -224,7 +224,7 @@
     "search": {
       "open": "Search",
       "close": "Close",
-      "placeholder": "Search...",
+      "placeholder": "What are you looking for",
       "title": "Search Store"
     },
     "customer": {

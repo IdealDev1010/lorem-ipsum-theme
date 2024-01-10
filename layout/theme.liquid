@@ -46,6 +46,7 @@
   {{ 'styles.css' | asset_url | stylesheet_tag: preload: true }}
   {{ 'custom-style.css' | asset_url | stylesheet_tag: preload: true }}
 
+
   {%- if settings.custom_theme_css != blank -%}
     {{ 'custom.css' | asset_url | stylesheet_tag: preload: true }}
   {%- endif -%}
@@ -150,5 +151,6 @@
 
   {{ 'vendor.min.js'  | asset_url | script_tag }}
   {{ 'theme.js'  | asset_url | script_tag }}
+  {{ 'custom.js' | asset_url | script_tag }}
 </body>
 </html>
