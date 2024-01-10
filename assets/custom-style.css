@@ -778,7 +778,7 @@
     }
     
     .pageheader--layout-inline-permitted .navigation.navigation--left {
-        transform: translateY(39px);
+        transform: translateY(30px);
     }
     
     .section-header .main-search__form {
@@ -788,6 +788,10 @@
 
     .main-search button.main-search__close {
         display: none;
+    }
+
+    .logo-area__right {
+        transform: translateY(-35px);
     }
 }
 
@@ -814,4 +818,18 @@ input[type=text].main-search__input::placeholder{
     display: flex;
     align-items: center;
     right: 10px;
+}
+
+.logo-area {
+    border-style: none;
+}
+
+.pageheader .cart-link {
+    flex-direction: row-reverse;
+    gap: 10px;
+    color: #004289;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 160%; 
 }
