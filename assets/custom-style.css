@@ -793,6 +793,39 @@
     .logo-area__right {
         transform: translateY(-35px);
     }
+
+    .section-footer__row {
+        display: flex;
+        gap: 110px;
+        margin: 0px;
+        padding-left: 200px;
+
+    }
+    .section-footer__row__col {
+        margin: 0px;
+        padding: 0px;
+    }
+
+    .section-footer__row__col:not(:last-child) {
+        margin: 0px;
+    }
+
+    .section-footer__title {
+        color:#333;
+        font-size: 24px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: normal;
+        text-transform: capitalize;
+    }
+
+    .section-footer__menu-block__menu {
+        color: #333;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 160%; 
+    }
 }
 
 input[type=text].main-search__input {
