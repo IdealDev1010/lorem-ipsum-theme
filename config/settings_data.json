@@ -1024,6 +1024,10 @@
     "prod_sold_out_show": false,
     "prod_pre_order_label_show": false,
     "enable_product_reviews_collection": false,
+    "social_twitter_url": "https:\/\/twitter.com\/shopify",
+    "social_facebook_url": "https:\/\/facebook.com\/shopify",
+    "social_pinterest_url": "https:\/\/pinterest.com\/shopify",
+    "social_instagram_url": "https:\/\/instagram.com\/shopify",
     "search_type": "product",
     "enable_live_search": true,
     "live_search_show_vendor": false,
@@ -1108,27 +1112,38 @@
           "1601372812538": {
             "type": "text",
             "settings": {
-              "title": "Talk about your store",
-              "text": "<p>Use this text area to tell your customers about your brand and vision. You can change it in the theme editor.<\/p>",
-              "image_width": 55,
-              "show_social_icons": true,
-              "soc_icons_large": true
+              "title": "",
+              "text": "",
+              "image": "shopify:\/\/shop_images\/logo.png",
+              "image_width": 155,
+              "show_social_icons": false,
+              "soc_icons_large": false
             }
           },
           "1601372709037": {
             "type": "menu",
             "settings": {
-              "title": "Quick links",
+              "title": "Info",
               "menu": "footer"
+            }
+          },
+          "text_44kLYB": {
+            "type": "text",
+            "settings": {
+              "title": "Contact",
+              "text": "<p>Tel &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"tel:012 3456789\" title=\"tel:012 3456789\">012 3456789<\/a><\/p><p>E-mail &nbsp; <a href=\"mailto:hello@domain.com\" title=\"mailto:hello@domain.com\">hello@domain.com<\/a><\/p><p><\/p><p>Lorem Ipsum Outdoor<\/p><p>Unit 1, Lipsum,<\/p><p>City, Co. County<\/p>",
+              "image_width": 100,
+              "show_social_icons": true,
+              "soc_icons_large": false
             }
           },
           "1601372771635": {
             "type": "newsletter",
             "settings": {
-              "title": "Newsletter",
-              "text": "<p>Sign up for exclusive offers, original stories, events and more.<\/p>",
+              "title": "Join Our Newsletter",
+              "text": "<p>Be the first to know about Our offers, events, new arrivals & sales.<\/p>",
               "button_style": "primary",
-              "show_social_icons": true,
+              "show_social_icons": false,
               "soc_icons_large": false
             }
           }
@@ -1136,6 +1151,7 @@
         "block_order": [
           "1601372812538",
           "1601372709037",
+          "text_44kLYB",
           "1601372771635"
         ],
         "settings": {
@@ -1199,7 +1215,7 @@
           "title": "JOIN OUR NEWSLETTER",
           "subheading": "<p>Be the first to know about our offers, events & new arrivals<\/p>",
           "color_bg": "#ffffff",
-          "back_img": "shopify:\/\/shop_images\/classic-camera-resting-on-book.jpg"
+          "back_img": "shopify:\/\/shop_images\/taking-notes-at-desk.jpg"
         }
       },
       "rich-text": {
@@ -1316,6 +1332,8 @@
         }
       }
     },
-    "content_for_index": []
+    "content_for_index": [
+
+    ]
   }
 }

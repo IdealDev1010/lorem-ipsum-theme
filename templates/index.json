@@ -6,7 +6,7 @@
         "template--16296339308699__bbeff370-6694-4003-a68b-b46d229eccd5-image-3": {
           "type": "image",
           "settings": {
-            "image": "shopify:\/\/shop_images\/cork-handled-fishing-rod.jpg",
+            "image": "shopify:\/\/shop_images\/fisherman-casts-off.jpg",
             "alignment": "center center",
             "enlarge_image": false,
             "subheading": "everything you need",
@@ -20,7 +20,7 @@
         "template--16296339308699__bbeff370-6694-4003-a68b-b46d229eccd5-image-4": {
           "type": "image",
           "settings": {
-            "image": "shopify:\/\/shop_images\/sea-fishing-the-big-blue.jpg",
+            "image": "shopify:\/\/shop_images\/hiker-looks-out-over-bay-surrounded-by-mountains.jpg",
             "alignment": "center center",
             "enlarge_image": true,
             "subheading": "on an adventure",
@@ -114,7 +114,7 @@
         "29fb11c2-6aed-4991-b9d5-4a276b1511bc": {
           "type": "collage",
           "settings": {
-            "image": "shopify:\/\/shop_images\/a-bridge-sitting-in-thick-pink-and-purple-fog.jpg",
+            "image": "shopify:\/\/shop_images\/an-outdoor-patio-with-a-rollin-with-my-homies-sign.jpg",
             "heading": "outdoor essentials",
             "description": "<p>Curabitur blandit tempus porttitor. Maecenas faucibus mollis.<\/p>",
             "btn_link": "#",
@@ -128,7 +128,8 @@
         "2f4d615f-9513-404c-a7cc-cea9298a9120",
         "29fb11c2-6aed-4991-b9d5-4a276b1511bc"
       ],
-      "settings": {}
+      "settings": {
+      }
     },
     "cc9631bd-a53c-4202-929f-283b7cb2a0f1": {
       "type": "featured-collection",

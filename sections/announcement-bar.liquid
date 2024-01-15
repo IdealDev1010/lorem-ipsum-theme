@@ -32,6 +32,7 @@
       <div class="announcement-bar__middle">
         {%- if section.blocks.size > 0 -%}
           <div class="announcement-bar__announcements">
+            <div class="announcement__icon">{% render 'icon-clock' %}</div>
             {%- for block in section.blocks -%}
               <div class="announcement{% unless forloop.first %} announcement--inactive{% endunless %}" {{ block.shopify_attributes }}>
                 <div class="announcement__text">{{ block.settings.text }}</div>
@@ -58,6 +59,7 @@
           </div>
         {% endif %}
       </div>
+      <div class="announcement__close-icon">{% render 'icon-close'%}</div>
     </div>
   </div>
 {%- endif -%}

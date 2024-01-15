@@ -216,7 +216,7 @@
     },
     "signup": {
       "post_success": "Thank you for signing up!",
-      "placeholder": "Enter email",
+      "placeholder": "",
       "input_label": "Email",
       "submit": "Sign up",
       "label": "Sign up for our newsletter"
@@ -224,7 +224,7 @@
     "search": {
       "open": "Search",
       "close": "Close",
-      "placeholder": "Search...",
+      "placeholder": "What are you looking for?",
       "title": "Search Store"
     },
     "customer": {

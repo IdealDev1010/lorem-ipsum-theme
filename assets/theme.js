@@ -2922,7 +2922,7 @@
           items: 5,
           center: false,
           nav: false,
-          dots: false,
+          dots: true,
           responsive: {
             0: {
               items: desktopNumPerRow < 4 ? 1 : 2 },
@@ -2947,7 +2947,7 @@
           items: Math.min($this.children().length, 8),
           center: true,
           nav: false,
-          dots: false };
+          dots: true };
 
       }
 
@@ -4447,7 +4447,7 @@
         fade: false,
         infinite: false,
         useTransform: true,
-        dots: false,
+        dots: true,
         arrows: false,
         waitForAnimate: false,
         appendArrows: $slideshow.siblings('.slideshow-controls').find('.slideshow-controls__arrows'),
@@ -4583,7 +4583,7 @@
               $('.lazyload--manual', this).removeClass('lazyload--manual').addClass('lazyload');
             }).owlCarousel({
               items: carouselVisibleItemCount,
-              dots: false,
+              dots: true,
               margin: 7,
               rtl: document.querySelector('html[dir=rtl]') ? true : false });
 
@@ -5851,7 +5851,7 @@
         slidesToScroll: 1,
         useTransform: true,
         arrows: true,
-        dots: false,
+        dots: true,
         prevArrow: '<button type="button" class="image-page-button image-page-button--previous ltr-icon" aria-label="' + theme.strings.previous + '">' + theme.icons.chevronLeft + '</button>',
         nextArrow: '<button type="button" class="image-page-button image-page-button--next ltr-icon" aria-label="' + theme.strings.next + '">' + theme.icons.chevronRight + '</button>',
         rtl: document.querySelector('html[dir=rtl]') ? true : false,
@@ -6568,7 +6568,7 @@
         slidesToShow: this.$testimonialContainer.hasClass('testimonial-list--without-images') ? 2 : 1,
         autoplay: this.$testimonialContainer.data('autoplay'),
         autoplaySpeed: this.$testimonialContainer.data('autoplay-speed'),
-        dots: false,
+        dots: true,
         arrows: true,
         appendArrows: this.$testimonialContainer.find('.testimonial-list__controls'),
         prevArrow: '<button type="button" class="slick-prev" aria-label="' + theme.strings.previous + '">' + theme.icons.chevronLeft + '</button>',

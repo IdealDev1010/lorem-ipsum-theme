@@ -5,7 +5,7 @@
         justify-content: space-evenly;
     }
 </style>
-<div class="">
+<div class="icon-with-text-container {% unless section.settings.full_width %}container{% endunless %}">
     <div class="icon-with-text" id="iwt--{{ section.id }}">
         {% for block in section.blocks %}
             <div class="icon-with-text__item">
@@ -28,6 +28,12 @@
                 "id": "back_color",
                 "label": "Background Color",
                 "default": "#004289"
+            },
+            {
+                "type": "checkbox",
+                "id": "full_width",
+                "label": "Full Width",
+                "default": true
             }
         ],
         "blocks": [
